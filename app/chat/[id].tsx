@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
+import FilledButton from '@/components/FilledButton';
 
 const chatData: { [key: number]: { sender: string; message: string }[] } = {
     1: [
@@ -60,9 +61,9 @@ export default function ChatPage() {
                     value={message}
                     onChangeText={setMessage}
                 />
-                <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
-                    <Text style={styles.sendButtonText}>Send</Text>
-                </TouchableOpacity>
+
+                <FilledButton icon="share" label="Send" onPress={handleSendMessage} />
+
             </View>
         </View>
     );
@@ -73,24 +74,31 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         padding: 20,
+        alignItems: 'center',
     },
     header: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
     },
+
     chatContainer: {
+        width: 320,
         flex: 1,
         marginBottom: 20,
     },
+
     messageContainer: {
+        width: 320,
         marginBottom: 10,
     },
+
     messageSender: {
         fontWeight: 500,
-        fontSize: 22,
+        fontSize: 18,
         marginBottom: 10,
     },
+
     myMessage: {
         alignItems: 'flex-start',
     },
@@ -103,30 +111,28 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         width: 190,
         padding: 10,
-        fontSize: 20,
+        fontSize: 14,
     },
+
+
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
     },
+
     input: {
+        margin: 5,
         flex: 1,
+        borderRadius: 100,
         borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 20,
-        padding: 10,
-        fontSize: 20,
-    },
-    sendButton: {
-        backgroundColor: '#ffd33d',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        marginLeft: 10,
-        borderRadius: 20,
-    },
-    sendButtonText: {
-        color: '#fff',
-        fontWeight: 'bold',
-        fontSize: 20,
+        borderColor: '#65558F',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        height: 40,
+        paddingHorizontal: 30,
+        backgroundColor: '#fff',
+        fontSize: 14,
+        color: '#65558F',
     },
 });

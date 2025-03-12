@@ -23,12 +23,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'row',
         paddingHorizontal: 20,
-        margin: 5,
+        margin: 7,
 
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
+        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
     },
     interestText: {
         color: '#333',

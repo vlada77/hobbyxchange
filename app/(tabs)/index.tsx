@@ -47,6 +47,16 @@ export default function Index() {
         <ImageViewer imgSource={profile.mainImage} />
       </View>
 
+      <View style={styles.interestsContainer}>
+        <Text style={styles.textLabel}>My Interests</Text>
+        <View style={styles.interestsBubbles}>
+          {profile.interests.map((interest, index) => (
+            <InterestButton key={index} label={interest} />
+          ))}
+        </View>
+      </View>
+
+
       <View style={styles.tradeContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.textLabel}>What I Want:</Text>
@@ -62,25 +72,12 @@ export default function Index() {
         </View>
       </View>
 
-      <View style={styles.interestsContainer}>
-        <Text style={styles.textLabel}>My Interests</Text>
-        <View style={styles.interestsBubbles}>
-          {profile.interests.map((interest, index) => (
-            <InterestButton key={index} label={interest} />
-          ))}
-        </View>
-      </View>
 
       <View style={styles.buttonsContainer}>
         <OutlinedButton label="View full profile" width={220} onPress={() => alert('You pressed a button.')} />
-        <Link
-          href={{
-            pathname: '/chat/[id]',
-            params: { id: profile.id.toString() }, // Pass the dynamic id here
-          }}
-        >
-          <FilledButton icon="comment" label="Chat" />
-        </Link>
+
+        <FilledButton icon="comment" label="Chat" onPress={() => router.push(`/chat/${profile.id}`)} />
+
       </View>
     </View >
   );
@@ -91,13 +88,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
+    padding: 20,
   },
 
 
   profileContainer: {
+    marginTop: 10,
     width: 320,
     alignItems: 'flex-start',
-    marginTop: 40,
   },
 
 
@@ -148,7 +146,7 @@ const styles = StyleSheet.create({
   },
 
   interestsBubbles: {
-    marginTop: 10,
+    marginTop: 5,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'flex-start',

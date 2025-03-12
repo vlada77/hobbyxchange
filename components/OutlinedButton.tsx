@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
         height: 40,
         paddingHorizontal: 20,
         backgroundColor: '#fff',
-        borderWidth: 2,
+        borderWidth: 1,
         borderColor: '#65558F',
         alignItems: 'center',
         justifyContent: 'center',
@@ -39,6 +39,6 @@ const styles = StyleSheet.create({
     },
     buttonLabel: {
         color: '#65558F',
-        fontSize: 16,
+        fontSize: 14,
     },
 });

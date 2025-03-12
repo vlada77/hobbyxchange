@@ -1,5 +1,7 @@
 import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+
 
 export default function TabLayout() {
     return (
@@ -17,11 +19,31 @@ export default function TabLayout() {
             }}
         >
             <Tabs.Screen
+                name="projects"
+                options={{
+                    title: 'Projects',
+                    tabBarIcon: ({ color, focused }) => (
+                        <Ionicons name={focused ? 'briefcase' : 'briefcase-outline'} color={color} size={22} />
+                    ),
+                }}
+            />
+
+            <Tabs.Screen
+                name="communities"
+                options={{
+                    title: 'Communities',
+                    tabBarIcon: ({ color, focused }) => (
+                        <Ionicons name={focused ? 'people' : 'people-outline'} color={color} size={22} />
+                    ),
+                }}
+            />
+
+            <Tabs.Screen
                 name="index"
                 options={{
                     title: 'Home',
                     tabBarIcon: ({ color, focused }) => (
-                        <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
+                        <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={22} />
                     ),
                 }}
             />
@@ -30,7 +52,7 @@ export default function TabLayout() {
                 name="messages"
                 options={{
                     title: 'Messages', tabBarIcon: ({ color, focused }) =>
-                        <Ionicons name={focused ? 'chatbubbles' : 'chatbubbles-outline'} color={color} size={24} />
+                        <Ionicons name={focused ? 'chatbubbles' : 'chatbubbles-outline'} color={color} size={22} />
                 }} />
 
             <Tabs.Screen
@@ -38,7 +60,7 @@ export default function TabLayout() {
                 options={{
                     title: 'Profile',
                     tabBarIcon: ({ color, focused }) => (
-                        <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24} />
+                        <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={22} />
                     ),
                 }}
             />

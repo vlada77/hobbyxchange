@@ -14,7 +14,7 @@ export default function FilledButton({ label, icon, onPress }: Props) {
                 style={styles.button}
                 onPress={onPress}>
                 {label && <Text style={styles.buttonLabel}>{label}</Text>}
-                {icon && <FontAwesome name={icon} size={18} color="#fff" style={styles.buttonIcon} />}
+                {icon && <FontAwesome name={icon} size={16} color="#fff" style={styles.buttonIcon} />}
             </Pressable>
         </View>
     );
@@ -23,8 +23,7 @@ export default function FilledButton({ label, icon, onPress }: Props) {
 
 const styles = StyleSheet.create({
     buttonContainer: {
-        marginHorizontal: 5,
-        marginVertical: 5,
+        margin: 5,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 100,
@@ -44,6 +43,6 @@ const styles = StyleSheet.create({
     },
     buttonLabel: {
         color: '#fff',
-        fontSize: 16,
+        fontSize: 14,
     },
 });
