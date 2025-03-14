@@ -1,17 +1,20 @@
 import { StyleSheet, View, Pressable, Text } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
+
 type Props = {
-    label: string;
+    label?: string;
     icon?: keyof typeof FontAwesome.glyphMap;
     onPress?: () => void;
+    color?: string;
+    height?: number;
 };
 
-export default function FilledButton({ label, icon, onPress }: Props) {
+export default function FilledButton({ label, icon, color = '#65558F', height, onPress }: Props) {
     return (
         <View style={styles.buttonContainer}>
             <Pressable
-                style={styles.button}
+                style={[styles.button, { backgroundColor: color, height }]}
                 onPress={onPress}>
                 {label && <Text style={styles.buttonLabel}>{label}</Text>}
                 {icon && <FontAwesome name={icon} size={16} color="#fff" style={styles.buttonIcon} />}
@@ -31,7 +34,6 @@ const styles = StyleSheet.create({
     button: {
         borderRadius: 100,
         height: 40,
-        backgroundColor: '#65558F',
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',

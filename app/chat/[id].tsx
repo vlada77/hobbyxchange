@@ -3,6 +3,30 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import FilledButton from '@/components/FilledButton';
+import OutlinedButton from '@/components/OutlinedButton';
+import ProfileInfo from '@/components/ProfileInfo';
+
+
+const profiles = [
+    {
+        id: '1',
+        name: 'Alice Noah',
+        avatar: require('@/assets/images/profilephoto.jpg'),
+        mainImage: require('@/assets/images/art-hobby.jpg'),
+        whatIWant: 'Dance Classes',
+        whatIOffer: 'Graphic Design',
+        interests: ['Art', 'Design', 'Technology'],
+    },
+    {
+        id: '2',
+        name: 'John Doe',
+        avatar: require('@/assets/images/profilephoto2.jpg'),
+        mainImage: require('@/assets/images/music-hobby.jpg'),
+        whatIWant: 'Piano Lessons',
+        whatIOffer: 'Photography',
+        interests: ['Music', 'Photography', 'Gaming'],
+    },
+];
 
 const chatData: { [key: number]: { sender: string; message: string }[] } = {
     1: [
@@ -19,6 +43,8 @@ const chatData: { [key: number]: { sender: string; message: string }[] } = {
 export default function ChatPage() {
     const { id } = useLocalSearchParams();
     const numericId = Number(id);
+    const nameOfChat = profiles[numericId - 1].name;
+    const imgOfChat = profiles[numericId - 1].avatar;
 
     const [messages, setMessages] = useState(chatData[numericId]);
 
@@ -35,7 +61,11 @@ export default function ChatPage() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>Chat with {numericId}</Text>
+            <View style={styles.profileContainer}>
+                <ProfileInfo avatarSource={imgOfChat} name={nameOfChat} />
+                <OutlinedButton icon="flag-o" label=" Report" height={34} borderColor="#993333" color="#A65A5A" onPress={() => alert('You pressed a button.')} />
+
+            </View>
 
             <ScrollView style={styles.chatContainer}>
                 {messages.map((msg, index) => (
@@ -76,9 +106,10 @@ const styles = StyleSheet.create({
         padding: 20,
         alignItems: 'center',
     },
-    header: {
-        fontSize: 24,
-        fontWeight: 'bold',
+    profileContainer: {
+        width: 320,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         marginBottom: 20,
     },
 
