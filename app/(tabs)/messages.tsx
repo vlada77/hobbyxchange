@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import ProfileInfo from '@/components/ProfileInfo';
 
@@ -13,7 +13,7 @@ export default function Messages() {
     const router = useRouter();
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false} >
 
             {conversations.map((conversation) => (
                 <TouchableOpacity
@@ -29,13 +29,13 @@ export default function Messages() {
                     </View>
                 </TouchableOpacity>
             ))}
-        </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+    scrollContainer: {
+        flexGrow: 1,
         backgroundColor: '#fff',
         padding: 20,
         alignItems: 'center',

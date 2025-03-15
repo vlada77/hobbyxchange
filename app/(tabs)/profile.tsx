@@ -1,11 +1,11 @@
 import ImageViewer from '@/components/ImageViewer';
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Text, View, StyleSheet, Image, ScrollView } from 'react-native';
 import InterestButton from '@/components/InterestButton';
 import OutlinedButton from '@/components/OutlinedButton';
 
 export default function ProfileScreen() {
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false} >
 
             <View style={styles.profileContainer}>
                 <Image source={require('@/assets/images/profilephoto.jpg')} style={styles.image} ></Image>
@@ -58,13 +58,13 @@ export default function ProfileScreen() {
                 </View>
             </View>
 
-        </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+    scrollContainer: {
+        flexGrow: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
         padding: 20,
@@ -137,8 +137,7 @@ const styles = StyleSheet.create({
     },
     textValue: {
         width: 320,
-        height: 35,
-        paddingVertical: 20,
+        paddingVertical: 5,
         borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'flex-start',
