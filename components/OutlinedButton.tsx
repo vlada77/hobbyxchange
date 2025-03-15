@@ -12,7 +12,7 @@ type Props = {
 
 };
 
-export default function OutlinedButton({ label, icon, width, height, borderColor, color, onPress }: Props) {
+export default function OutlinedButton({ label, icon, width = 150, height = 40, borderColor = '#65558F', color = '#271b44', onPress }: Props) {
     return (
         <View style={styles.buttonContainer}>
             <Pressable
@@ -28,18 +28,16 @@ export default function OutlinedButton({ label, icon, width, height, borderColor
 
 const styles = StyleSheet.create({
     buttonContainer: {
-        margin: 5,
+        margin: 10,
         alignItems: 'center',
-        justifyContent: 'center',
         borderRadius: 100,
     },
     button: {
         borderRadius: 100,
         height: 40,
-        paddingHorizontal: 20,
+        paddingHorizontal: 5,
         backgroundColor: '#fff',
         borderWidth: 1,
-        borderColor: '#65558F',
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',

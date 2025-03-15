@@ -1,10 +1,10 @@
 import ImageViewer from '@/components/ImageViewer';
 import OutlinedButton from '@/components/OutlinedButton';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, ScrollView } from 'react-native';
 
 export default function CommunitiesScreen() {
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false} >
             <View style={styles.communitiesContainer}>
                 <Text style={styles.textLabel}>My Communities</Text>
                 <View style={styles.communitiesGallery}>
@@ -73,13 +73,13 @@ export default function CommunitiesScreen() {
                 </View>
             </View>
 
-        </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+    scrollContainer: {
+        flexGrow: 1,
         backgroundColor: '#fff',
         padding: 20,
         alignItems: 'center',
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     textLabel: {
         marginLeft: 5,
         fontSize: 18,
-        fontWeight: '400',
+        fontWeight: '500',
         marginVertical: 5,
 
     },

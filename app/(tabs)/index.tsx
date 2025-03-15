@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import { Link } from 'expo-router';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
@@ -8,6 +8,7 @@ import OutlinedButton from '@/components/OutlinedButton';
 import FilledButton from '@/components/FilledButton';
 import InterestButton from '@/components/InterestButton';
 import ProfileInfo from '@/components/ProfileInfo';
+
 
 const profiles = [
   {
@@ -36,11 +37,11 @@ export default function Index() {
   const profile = profiles[0];
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false} >
 
-      <View style={styles.profileContainer}>
+      < View style={styles.profileContainer} >
         <ProfileInfo avatarSource={profile.avatar} name={profile.name} />
-      </View>
+      </View >
 
 
       <View style={styles.imageContainer}>
@@ -79,13 +80,13 @@ export default function Index() {
         <FilledButton icon="comment" label="Chat" onPress={() => router.push(`/chat/${profile.id}`)} />
 
       </View>
-    </View >
+    </ScrollView >
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  scrollContainer: {
+    flexGrow: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     padding: 20,
@@ -93,9 +94,9 @@ const styles = StyleSheet.create({
 
 
   profileContainer: {
-    marginTop: 10,
     width: 320,
     alignItems: 'flex-start',
+    marginTop: 10,
   },
 
 
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
     width: 320,
     alignItems: 'flex-start',
     flexDirection: 'row',
-    marginTop: 20,
+    marginTop: 10,
   },
 
   textContainer: {
@@ -122,9 +123,8 @@ const styles = StyleSheet.create({
   },
   textValue: {
     width: 150,
-    height: 35,
-    paddingVertical: 20,
-    borderRadius: 5,
+    paddingVertical: 2,
+    borderRadius: 2,
     marginTop: 10,
     justifyContent: 'center',
     alignItems: 'flex-start',
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   interestsContainer: {
     width: 320,
     alignItems: 'flex-start',
-    marginTop: 15,
+    marginTop: 10,
   },
 
   interestsBubbles: {
@@ -155,6 +155,6 @@ const styles = StyleSheet.create({
 
   buttonsContainer: {
     flexDirection: 'row',
-    marginTop: 30,
+    marginTop: 10,
   },
 });

@@ -10,7 +10,7 @@ type Props = {
     height?: number;
 };
 
-export default function FilledButton({ label, icon, color = '#65558F', height, onPress }: Props) {
+export default function FilledButton({ label, icon, color = '#65558F', height = 40, onPress }: Props) {
     return (
         <View style={styles.buttonContainer}>
             <Pressable
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',
-        paddingHorizontal: 18,
+        paddingHorizontal: 16,
     },
     buttonIcon: {
         paddingLeft: 10,
