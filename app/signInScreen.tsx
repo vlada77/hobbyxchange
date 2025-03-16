@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { View, TextInput, Button, Text, StyleSheet } from "react-native";
+import { View, TextInput, Button, Text, StyleSheet, Pressable, Image } from "react-native";
 import { signUp, signIn, logOut } from "@/services/authService";
+import { router } from "expo-router";
+import FilledButton from "@/components/FilledButton";
 
 export default function SignInScreen() {
     const [email, setEmail] = useState("");
@@ -12,6 +14,7 @@ export default function SignInScreen() {
         try {
             const newUser = await signUp(email, password);
             setUser(newUser);
+            router.replace("/(tabs)/profile");
         } catch (err: any) {
             setError(err.message);
         }
@@ -21,6 +24,7 @@ export default function SignInScreen() {
         try {
             const loggedInUser = await signIn(email, password);
             setUser(loggedInUser);
+            router.replace("/(tabs)/matching");
         } catch (err: any) {
             setError(err.message);
         }
@@ -40,6 +44,9 @@ export default function SignInScreen() {
                 </>
             ) : (
                 <>
+
+                    <Image source={require('@/assets/images/temp-logo.jpg')} style={styles.image}></Image>
+
                     <TextInput
                         style={styles.input}
                         placeholder="Email"
@@ -54,9 +61,26 @@ export default function SignInScreen() {
                         onChangeText={setPassword}
                         secureTextEntry
                     />
-                    <Button title="Sign Up" onPress={handleSignUp} />
-                    <Button title="Log In" onPress={handleSignIn} />
-                    {error ? <Text style={styles.error}>{error}</Text> : null}
+
+                    <View style={styles.buttonsContainer}>
+                        <FilledButton label="Log In" width={320} onPress={handleSignIn} />
+
+                        {error ? <Text style={styles.error}>{error}</Text> : null}
+
+                        <View style={styles.signUpContainer}>
+                            <Text style={styles.text}>Don't have an account?</Text>
+                            <Pressable style={styles.button} onPress={handleSignUp}>
+                                <Text style={styles.buttonLabel}>Sign Up</Text>
+                            </Pressable>
+
+                        </View>
+
+
+
+
+                    </View>
+
+
                 </>
             )}
         </View>
@@ -64,7 +88,68 @@ export default function SignInScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: "center", padding: 20 },
-    input: { borderWidth: 1, padding: 10, marginBottom: 10 },
-    error: { color: "red" }
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        padding: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+    },
+
+    image: {
+        width: 200,
+        height: 200,
+        marginBottom: 50,
+    },
+    input: {
+        width: 320,
+        marginBottom: 10,
+        height: 40,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        borderColor: '#65558F',
+        borderWidth: 1,
+        backgroundColor: '#fff',
+        fontSize: 14,
+        color: '#65558F',
+
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+
+    },
+
+    buttonsContainer: {
+        width: 320,
+        marginTop: 15,
+        alignItems: 'center',
+        flexDirection: 'column',
+    },
+
+
+    signUpContainer: {
+        alignItems: 'center',
+        marginTop: 50,
+
+    },
+    text: {
+        marginTop: 10,
+        fontSize: 16,
+        fontWeight: 300,
+    },
+    button: {
+        marginTop: 5,
+    },
+    buttonLabel: {
+        color: '#4F378A',
+        fontSize: 16,
+        fontWeight: 400,
+        textDecorationLine: 'underline',
+
+    },
+    error: {
+        marginTop: 10,
+        color: "red"
+    }
 });

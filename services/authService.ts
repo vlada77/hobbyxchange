@@ -1,7 +1,8 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { auth } from "@/firebase/firebaseConfig";
+import { auth } from '@/firebase/firebaseConfig';
+import { router } from "expo-router";
 
-// 🔹 Sign Up Function
+
 export const signUp = async (email: string, password: string) => {
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -12,7 +13,6 @@ export const signUp = async (email: string, password: string) => {
     }
 };
 
-// 🔹 Sign In Function
 export const signIn = async (email: string, password: string) => {
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -23,7 +23,6 @@ export const signIn = async (email: string, password: string) => {
     }
 };
 
-// 🔹 Log Out Function
 export const logOut = async () => {
     try {
         await signOut(auth);

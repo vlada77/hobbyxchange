@@ -8,13 +8,14 @@ type Props = {
     onPress?: () => void;
     color?: string;
     height?: number;
+    width?: number;
 };
 
-export default function FilledButton({ label, icon, color = '#65558F', height = 40, onPress }: Props) {
+export default function FilledButton({ label, icon, color = '#65558F', height = 40, width, onPress }: Props) {
     return (
         <View style={styles.buttonContainer}>
             <Pressable
-                style={[styles.button, { backgroundColor: color, height }]}
+                style={[styles.button, { backgroundColor: color, height, width }]}
                 onPress={onPress}>
                 {label && <Text style={styles.buttonLabel}>{label}</Text>}
                 {icon && <FontAwesome name={icon} size={16} color="#fff" style={styles.buttonIcon} />}
