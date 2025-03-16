@@ -11,13 +11,7 @@ export default function SignInScreen() {
     const [error, setError] = useState("");
 
     const handleSignUp = async () => {
-        try {
-            const newUser = await signUp(email, password);
-            setUser(newUser);
-            router.replace("/(tabs)/profile");
-        } catch (err: any) {
-            setError(err.message);
-        }
+        router.push("/signUpScreen");
     };
 
     const handleSignIn = async () => {
@@ -74,9 +68,6 @@ export default function SignInScreen() {
                             </Pressable>
 
                         </View>
-
-
-
 
                     </View>
 
