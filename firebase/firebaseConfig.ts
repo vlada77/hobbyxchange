@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getStorage } from "firebase/storage";
 
 
 
@@ -25,4 +26,6 @@ onAuthStateChanged(auth, user => {
         console.log('no user')
     }
 });
+
+export const storage = getStorage(app);
 export { app, auth, db };
