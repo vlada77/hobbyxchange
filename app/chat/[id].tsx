@@ -1,99 +1,127 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
+import { collection, doc, getDoc, getDocs, addDoc, orderBy, query, onSnapshot, serverTimestamp } from "firebase/firestore";
+import { auth, db } from "@/firebase/firebaseConfig";
 import FilledButton from '@/components/FilledButton';
 import OutlinedButton from '@/components/OutlinedButton';
 import ProfileInfo from '@/components/ProfileInfo';
+import { ImageSource } from 'expo-image';
 
+export default function ChatScreen() {
+    const { chatId } = useLocalSearchParams();
 
-const profiles = [
-    {
-        id: '1',
-        name: 'Alice Noah',
-        avatar: require('@/assets/images/profilephoto.jpg'),
-        mainImage: require('@/assets/images/art-hobby.jpg'),
-        whatIWant: 'Dance Classes',
-        whatIOffer: 'Graphic Design',
-        interests: ['Art', 'Design', 'Technology'],
-    },
-    {
-        id: '2',
-        name: 'John Doe',
-        avatar: require('@/assets/images/profilephoto2.jpg'),
-        mainImage: require('@/assets/images/music-hobby.jpg'),
-        whatIWant: 'Piano Lessons',
-        whatIOffer: 'Photography',
-        interests: ['Music', 'Photography', 'Gaming'],
-    },
-];
-
-const chatData: { [key: number]: { sender: string; message: string }[] } = {
-    1: [
-        { sender: 'Alice', message: 'Hey, let’s connect!' },
-        { sender: 'You', message: 'Sure, looking forward to it!' },
-    ],
-    2: [
-        { sender: 'John', message: 'Are you free tomorrow?' },
-        { sender: 'You', message: 'Yes, I am! What’s up?' },
-    ],
-};
-
-
-export default function ChatPage() {
-    const { id } = useLocalSearchParams();
-    const numericId = Number(id);
-    const nameOfChat = profiles[numericId - 1].name;
-    const imgOfChat = profiles[numericId - 1].avatar;
-
-    const [messages, setMessages] = useState(chatData[numericId]);
-
-    const [message, setMessage] = useState('');
-
-    const handleSendMessage = () => {
-        if (message.trim()) {
-            const newMessage = { sender: 'You', message: message.trim() };
-            setMessages((prevMessages) => [...prevMessages, newMessage]);
-            setMessage('');
-        }
+    type Message = {
+        id: string;
+        senderId: string;
+        text: string;
+        timestamp: any;
     };
 
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [newMessage, setNewMessage] = useState("");
+    const [otherUser, setOtherUser] = useState<{ name: string; profilePic: ImageSource } | null>(null);
 
+    useEffect(() => {
+        const fetchOtherUser = async () => {
+            if (typeof chatId !== 'string') {
+                console.error("chatId is not a string:", chatId);
+                return;
+            }
+            const chatRef = doc(db, "chats", chatId);
+            const chatSnap = await getDoc(chatRef);
+
+            if (chatSnap.exists()) {
+                const chatData = chatSnap.data();
+                const otherUserId = chatData.userIds.find((id: string) => id !== auth.currentUser?.uid);
+
+                if (otherUserId) {
+                    const userRef = doc(db, "users", otherUserId);
+                    const userSnap = await getDoc(userRef);
+
+                    if (userSnap.exists()) {
+                        setOtherUser({
+                            name: userSnap.data().name,
+                            profilePic: userSnap.data().profilePic,
+                        });
+                    }
+                }
+            }
+        };
+
+        fetchOtherUser();
+    }, [chatId]);
+
+
+    useEffect(() => {
+        const messagesRef = collection(db, `chats/${chatId}/messages`);
+        const q = query(messagesRef, orderBy("timestamp"));
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const fetchedMessages: Message[] = snapshot.docs.map((msgDoc) => ({
+                id: msgDoc.id,
+                senderId: msgDoc.data().senderId || "",
+                text: msgDoc.data().text || "",
+                timestamp: msgDoc.data().timestamp || null,
+            }));
+            setMessages(fetchedMessages);
+        });
+
+        return () => unsubscribe();
+    }, [chatId]);
+
+
+    const sendMessage = async () => {
+        if (!auth.currentUser || !newMessage.trim()) return;
+
+        await addDoc(collection(db, `chats/${chatId}/messages`), {
+            senderId: auth.currentUser.uid,
+            text: newMessage,
+            timestamp: serverTimestamp(),
+        });
+
+        setNewMessage("");
+    };
     return (
         <View style={styles.container}>
-            <View style={styles.profileContainer}>
-                <ProfileInfo avatarSource={imgOfChat} name={nameOfChat} />
-                <OutlinedButton icon="flag-o" label=" Report" height={34} borderColor="#993333" color="#A65A5A" onPress={() => alert('You pressed a button.')} />
 
+            <View style={styles.profileContainer}>
+                {otherUser ? (
+                    <ProfileInfo avatarSource={otherUser.profilePic} name={otherUser.name} />
+                ) : (
+                    <Text>Loading...</Text>
+                )}
+                <OutlinedButton icon="flag-o" label=" Report" height={34} borderColor="#993333" color="#A65A5A" onPress={() => alert("You pressed a button.")} />
             </View>
 
+
             <ScrollView style={styles.chatContainer}>
-                {messages.map((msg, index) => (
+                {messages.map((msg) => (
                     <View
-                        key={index}
+                        key={msg.id}
                         style={[
                             styles.messageContainer,
-                            msg.sender === 'You' ? styles.otherMessage : styles.myMessage,
+                            msg.senderId === auth.currentUser?.uid ? styles.myMessage : styles.otherMessage,
                         ]}
                     >
-                        <Text style={styles.messageSender}>{msg.sender}:</Text>
-                        <Text style={styles.messageText}>{msg.message}</Text>
+                        <Text style={styles.messageSender}>
+                            {msg.senderId === auth.currentUser?.uid ? "You" : otherUser?.name}
+                        </Text>
+                        <Text style={styles.messageText}>{msg.text}</Text>
                     </View>
                 ))}
             </ScrollView>
 
 
-            {/* Message input */}
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}
                     placeholder="Type your message..."
-                    value={message}
-                    onChangeText={setMessage}
+                    value={newMessage}
+                    onChangeText={setNewMessage}
                 />
-
-                <FilledButton icon="share" label="Send" onPress={handleSendMessage} />
-
+                <FilledButton icon="share" label="Send" onPress={sendMessage} />
             </View>
         </View>
     );

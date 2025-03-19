@@ -2,7 +2,9 @@ import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import { Link } from 'expo-router';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-
+import { useEffect, useState } from 'react';
+import { db, auth } from '@/firebase/firebaseConfig';
+import { doc, getDoc, setDoc, collection, getDocs, query, addDoc, orderBy, onSnapshot, serverTimestamp } from 'firebase/firestore';
 import ImageViewer from '@/components/ImageViewer';
 import OutlinedButton from '@/components/OutlinedButton';
 import FilledButton from '@/components/FilledButton';
@@ -10,77 +12,117 @@ import InterestButton from '@/components/InterestButton';
 import ProfileInfo from '@/components/ProfileInfo';
 
 
-const profiles = [
-    {
-        id: '1',
-        name: 'Alice Noah',
-        avatar: require('@/assets/images/profilephoto.jpg'),
-        mainImage: require('@/assets/images/art-hobby.jpg'),
-        whatIWant: 'Dance Classes',
-        whatIOffer: 'Graphic Design',
-        interests: ['Art', 'Design', 'Technology'],
-    },
-    {
-        id: '2',
-        name: 'John Doe',
-        avatar: require('@/assets/images/profilephoto2.jpg'),
-        mainImage: require('@/assets/images/music-hobby.jpg'),
-        whatIWant: 'Piano Lessons',
-        whatIOffer: 'Photography',
-        interests: ['Music', 'Photography', 'Gaming'],
-    },
-];
-
-
-export default function Index() {
+export default function MatchingPage() {
+    const [randomUser, setRandomUser] = useState<any>(null);
     const router = useRouter();
-    const profile = profiles[0];
+    const [loading, setLoading] = useState(true);
+    const currentUserId = auth.currentUser?.uid;
+    const currentUser = auth.currentUser;
+
+    if (!currentUserId) {
+        console.error("User is not authenticated");
+        return;
+    }
+
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                if (auth.currentUser) {
+
+                    const currentUserRef = doc(db, "users", auth.currentUser.uid);
+                    const currentUserSnap = await getDoc(currentUserRef);
+
+                    if (!currentUserSnap.exists()) {
+                        console.error("Current user not found in Firestore.");
+                        return;
+                    }
+
+                    const currentUserData = currentUserSnap.data();
+                    const currentUserLocation = currentUserData.location;
+
+                    const usersRef = collection(db, "users");
+                    const querySnapshot = await getDocs(usersRef);
+
+                    const allUsers = querySnapshot.docs.map(doc => doc.data());
+
+                    const users = allUsers.filter(user =>
+                        user.uid !== auth.currentUser?.uid &&
+                        user.location === currentUserLocation
+                    ); 
+
+                    if (users.length > 0) {
+                        const randomUser = users[Math.floor(Math.random() * users.length)];
+                        setRandomUser(randomUser);
+                    }
+                    else {
+                        console.log("No users found...");
+                    }
+                }
+                setLoading(false);
+
+            } catch (error) {
+                console.error("Error fetching users:", error);
+            }
+        };
+
+        fetchUsers();
+    }, [currentUserId]);
+
+    const handleChat = async () => {
+        if (!randomUser) return;
+
+        const chatId = [currentUserId, randomUser.uid].sort().join("_");
+
+        const chatRef = doc(db, "chats", chatId);
+        const chatSnap = await getDoc(chatRef);
+
+        if (!chatSnap.exists()) {
+            await setDoc(chatRef, {
+                userIds: [currentUserId, randomUser.uid],
+                lastMessage: "",
+                timestamp: new Date(),
+            });
+        }
+
+        router.push(`/chat/${chatId}`);
+    };
 
     return (
-        <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false} >
+        <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+            {randomUser ? (
+                <View style={styles.profileContainer}>
+                    <ProfileInfo avatarSource={randomUser.profilePic} name={randomUser.name} />
+                    <View style={styles.imageContainer}>
+                        {randomUser?.mainImage && (
+                            <ImageViewer imgSource={randomUser.mainImage} />
+                        )}
+                    </View>
 
-            < View style={styles.profileContainer} >
-                <ProfileInfo avatarSource={profile.avatar} name={profile.name} />
-            </View >
+                    <View style={styles.interestsContainer}>
+                        <Text style={styles.textLabel}>My Interests</Text>
+                        <View style={styles.interestsBubbles}>
+                            {randomUser?.interests.map((interest: string, index: number) => (
+                                <InterestButton key={index} label={interest} />
+                            ))}
 
+                            {randomUser?.interests.map((interest: string, index: number) => (
+                                <InterestButton key={index} label={interest} />
+                            ))}
+                        </View>
+                    </View>
 
-            <View style={styles.imageContainer}>
-                <ImageViewer imgSource={profile.mainImage} />
-            </View>
-
-            <View style={styles.interestsContainer}>
-                <Text style={styles.textLabel}>My Interests</Text>
-                <View style={styles.interestsBubbles}>
-                    {profile.interests.map((interest, index) => (
-                        <InterestButton key={index} label={interest} />
-                    ))}
-                </View>
-            </View>
-
-
-            <View style={styles.tradeContainer}>
-                <View style={styles.textContainer}>
-                    <Text style={styles.textLabel}>What I Want:</Text>
-                    <View style={styles.textValue}>
-                        <Text style={styles.text}>{profile.whatIWant}</Text>
+                    <View style={styles.buttonsContainer}>
+                        <OutlinedButton label="View full profile" width={220} onPress={() => alert('You pressed a button.')} />
+                        <FilledButton icon="comment" label="Chat" onPress={handleChat} />
                     </View>
                 </View>
-                <View style={styles.textContainer}>
-                    <Text style={styles.textLabel}>What I Offer:</Text>
-                    <View style={styles.textValue}>
-                        <Text style={styles.text}>{profile.whatIOffer}</Text>
-                    </View>
-                </View>
-            </View>
+            ) : (
+                <Text>Loading...</Text>
+            )}
 
 
-            <View style={styles.buttonsContainer}>
-                <OutlinedButton label="View full profile" width={220} onPress={() => alert('You pressed a button.')} />
-
-                <FilledButton icon="comment" label="Chat" onPress={() => router.push(`/chat/${profile.id}`)} />
-
-            </View>
-        </ScrollView >
+        </ScrollView>
     );
 }
 
