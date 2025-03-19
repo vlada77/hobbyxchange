@@ -27,12 +27,11 @@ export default function SignUpScreen() {
     const [profilePic, setProfilePic] = useState<string | null>(null);
     const [error, setError] = useState("");
 
-    // Pick Image from Gallery
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [1, 1], // Square image
+            aspect: [1, 1],
             quality: 1,
         });
 
@@ -41,7 +40,7 @@ export default function SignUpScreen() {
         }
     };
 
-    // Upload Image to Firebase Storage
+
     const uploadProfilePic = async (userId: string) => {
         if (!profilePic) return null;
 
@@ -53,7 +52,7 @@ export default function SignUpScreen() {
         return await getDownloadURL(storageRef);
     };
 
-    // Handle Account Creation
+
     const handleCreateAccount = async () => {
         console.log("handleCreateAccount called");
         try {
@@ -62,11 +61,12 @@ export default function SignUpScreen() {
             const user = userCredential.user;
             console.log("Account created for:", user.uid);
 
-            // Upload Profile Picture to Firebase Storage
+
             const profilePicUrl = await uploadProfilePic(user.uid);
 
-            // Save user profile to Firestore
+
             await setDoc(doc(db, "users", user.uid), {
+                id: user.uid,
                 email,
                 name,
                 occupation,
@@ -76,13 +76,14 @@ export default function SignUpScreen() {
                 whatIWant,
                 whatIOffer,
                 interests: interests.split(","),
-                profilePic: profilePicUrl || null, // Save profile picture URL
+                hobbyImage: profilePicUrl || null,
+                profilePic: profilePicUrl || null,
                 isProfileComplete: true,
                 createdAt: new Date(),
             });
 
             console.log("Profile created in Firestore!");
-            // Redirect to Matching Page
+
             router.replace("/(tabs)/matching");
         } catch (error: any) {
             setError(error.message);
@@ -94,7 +95,7 @@ export default function SignUpScreen() {
         <View style={styles.container}>
             <Text style={styles.title}>Create Your Account</Text>
 
-            {/* Profile Picture Selector */}
+
             <TouchableOpacity onPress={pickImage}>
                 {profilePic ? (
                     <Image source={{ uri: profilePic }} style={styles.profileImage} />
@@ -106,7 +107,7 @@ export default function SignUpScreen() {
                 )}
             </TouchableOpacity>
 
-            {/* Form Fields */}
+
             <TextInput placeholder="Full Name" value={name} onChangeText={setName} style={styles.input} />
             <TextInput placeholder="Occupation" value={occupation} onChangeText={setOccupation} style={styles.input} />
             <TextInput placeholder="Location" value={location} onChangeText={setLocation} style={styles.input} />
@@ -128,7 +129,7 @@ export default function SignUpScreen() {
     );
 }
 
-// Styles
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

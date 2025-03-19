@@ -4,7 +4,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 type Props = {
     label: string;
     icon?: keyof typeof FontAwesome.glyphMap;
-    width?: number; // Custom width
+    width?: number;
     height?: number;
     borderColor?: string;
     color?: string;

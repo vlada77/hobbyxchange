@@ -1,34 +1,46 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useState, useEffect } from 'react';
+import { db, auth } from '@/firebase/firebaseConfig';
+import { collection, getDocs, query } from 'firebase/firestore';
+import { fetchUserChats } from "@/utils/fetchUserChats";
 import ProfileInfo from '@/components/ProfileInfo';
-
-// Sample conversation data
-const conversations = [
-    { id: '1', name: 'Alice Noah', lastMessage: 'Hey, let’s connect!', profileImage: require('@/assets/images/profilephoto.jpg') },
-    { id: '2', name: 'Bob Smith', lastMessage: 'Are you free tomorrow?', profileImage: require('@/assets/images/profilephoto2.jpg') },
-    // More conversations can go here
-];
-
 export default function Messages() {
     const router = useRouter();
+    const [chats, setChats] = useState<any[]>([]);
+
+    useEffect(() => {
+        const loadChats = async () => {
+            const chatData = await fetchUserChats();
+            setChats(chatData);
+        };
+
+        loadChats();
+    }, []);
 
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false} >
-
-            {conversations.map((conversation) => (
-                <TouchableOpacity
-                    key={conversation.id}
-                    style={styles.conversationItem}
-                    onPress={() => router.push(`/chat/${conversation.id}`)}
-                >
-                    <View style={styles.conversationContent}>
-                        <View style={styles.textContainer}>
-                            <ProfileInfo avatarSource={conversation.profileImage} name={conversation.name} />
-                            <Text style={styles.lastMessage}>{conversation.lastMessage}</Text>
+            {chats.length === 0 ? (
+                <View style={{ marginTop: 150, padding: 20, alignItems: 'center', justifyContent: 'center' }}>
+                    <Image source={require('@/assets/images/waiting.jpg')} style={{ width: 180, height: 180, padding: 20, marginVertical: 10, borderRadius: 50, }}></Image>
+                    <Text style={{ textAlign: 'center', fontWeight: '200', fontSize: 16, }}> No conversations yet... Start chatting with someone!</Text>
+                </View>
+            ) : (
+                chats.map((chat) => (
+                    <TouchableOpacity
+                        key={chat.chatId}
+                        style={styles.conversationItem}
+                        onPress={() => router.push(`/chat/${chat.chatId}`)}
+                    >
+                        <View style={styles.conversationContent}>
+                            <View style={styles.textContainer}>
+                                <ProfileInfo avatarSource={chat.otherUser.profilePic} name={chat.otherUser.name} />
+                                <Text style={styles.lastMessage}>{chat.lastMessage}</Text>
+                            </View>
                         </View>
-                    </View>
-                </TouchableOpacity>
-            ))}
+                    </TouchableOpacity>
+                ))
+            )}
         </ScrollView>
     );
 }

@@ -9,6 +9,7 @@ import InterestButton from "@/components/InterestButton";
 import ImageViewer from "@/components/ImageViewer";
 import FilledButton from "@/components/FilledButton";
 
+
 export default function ProfileScreen() {
     const router = useRouter();
     const [userData, setUserData] = useState<any>(null);
@@ -30,15 +31,15 @@ export default function ProfileScreen() {
         };
 
         fetchUserData();
-    }, []);
+    }, [auth.currentUser?.uid]);
 
     const handleLogout = async () => {
         await logOut();
-        router.replace("/signInScreen");  // Redirect to sign-in screen after logout
+        router.replace("/signInScreen");
     };
 
     if (loading) {
-        return <ActivityIndicator size="large" color="#0000ff" />;
+        return <ActivityIndicator size="large" color="#0000ff" style={styles.activityindicator} />;
     }
 
     return (
@@ -61,7 +62,7 @@ export default function ProfileScreen() {
                         </View>
                     </View>
                     <View style={styles.editButtonContainer}>
-                        <OutlinedButton label="Edit Profile" width={320}></OutlinedButton>
+                        <OutlinedButton label="Edit Profile" width={320} onPress={() => router.push(`/editProfileScreen`)}></OutlinedButton>
                     </View>
 
                     <View style={styles.messageContainer}>
@@ -93,14 +94,22 @@ export default function ProfileScreen() {
                         </View>
                     </View>
 
-                    <View style={styles.galleryContainer}>
-                        <Text style={styles.textLabel}>Gallery</Text>
-                        <View style={styles.photoGallery}>
-                            <ImageViewer imgSource={require('@/assets/images/art-hobby.jpg')} style={styles.imageStyle}></ImageViewer>
-                            <ImageViewer imgSource={require('@/assets/images/art-hobby.jpg')} style={styles.imageStyle}></ImageViewer>
-                            <ImageViewer imgSource={require('@/assets/images/art-hobby.jpg')} style={styles.imageStyle}></ImageViewer>
+                    <View style={styles.myHobby}>
+                        <Text style={styles.textLabel}>My Hobby:</Text>
+                        <View style={styles.hobbyimagecontainer}>
+                            {userData.hobbyImage ? (
+                                <View style={styles.mainImageContainer}>
+                                    <Image source={{ uri: userData.hobbyImage }} style={styles.mainPic} />
+                                </View>
+
+                            ) : (
+                                <Text style={styles.infodetails}>Edit profile to add an image that best represents your personality or hobby! </Text>
+
+                            )}
+
                         </View>
                     </View>
+
 
                     <FilledButton label="Log out" width={160} onPress={handleLogout}></FilledButton>
                 </>
@@ -111,6 +120,10 @@ export default function ProfileScreen() {
     );
 }
 const styles = StyleSheet.create({
+    activityindicator: {
+        marginTop: 10,
+
+    },
     scrollContainer: {
         flexGrow: 1,
         backgroundColor: '#fff',
@@ -211,20 +224,45 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
 
-    galleryContainer: {
-        width: 320,
+    hobbyimagecontainer: {
         marginTop: 10,
+        alignItems: 'center',
+        width: 320,
+        textAlign: 'center',
         marginBottom: 30,
-    },
+        paddingVertical: 30,
+        backgroundColor: '#F0EDF0',
+        borderRadius: 10,
 
-    photoGallery: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
     },
-    imageStyle: {
-        width: 90,
-        height: 90,
-        margin: 8,
+    mainImageContainer: {
+        alignItems: 'center',
+
+    },
+    mainPic: {
+        width: 250,
+        height: 250,
+        margin: 5,
+        borderRadius: 10
+    },
+    infodetails:
+    {
+        fontSize: 14,
+        color: '#919191',
+        fontWeight: '400',
+        marginVertical: 5,
+        fontStyle: 'italic',
+        textAlign: 'center',
+    },
+    mainText: {
+        fontWeight: '500',
+        fontSize: 18,
+        marginBottom: 15,
+    },
+    myHobby: {
+        width: 320,
+        alignItems: 'flex-start',
+        marginTop: 15,
     }
 
 
