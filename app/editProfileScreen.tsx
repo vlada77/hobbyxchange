@@ -6,6 +6,8 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import FilledButton from "@/components/FilledButton";
+import { uploadImage } from '@/utils/uploadImage';
+import * as FileSystem from "expo-file-system";
 
 export default function EditProfileScreen() {
     const router = useRouter();
@@ -57,14 +59,23 @@ export default function EditProfileScreen() {
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [1, 1],
-            quality: 1,
+            quality: 0.5,
         });
 
         if (!result.canceled) {
-            setUserData((prevData) => ({ ...prevData, profilePic: result.assets[0].uri }));
+            const imageUri = result.assets[0].uri;
+
+            const base64Image = await FileSystem.readAsStringAsync(imageUri, {
+                encoding: FileSystem.EncodingType.Base64,
+            });
+
+            const fullBase64 = `data:image/jpeg;base64,${base64Image}`;
+
+            const imageUrl = await uploadImage(fullBase64);
+            setUserData((prev) => ({ ...prev, profilePic: imageUrl }));
         }
     };
 
@@ -73,11 +84,21 @@ export default function EditProfileScreen() {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [1, 1],
-            quality: 1,
+            quality: 0.5,
         });
 
+
         if (!result.canceled) {
-            setUserData((prev) => ({ ...prev, hobbyImage: result.assets[0].uri }));
+            const hobbyimageUri = result.assets[0].uri;
+
+            const hobbybase64Image = await FileSystem.readAsStringAsync(hobbyimageUri, {
+                encoding: FileSystem.EncodingType.Base64,
+            });
+
+            const fullBase64 = `data:image/jpeg;base64,${hobbybase64Image}`;
+
+            const hobbyimageUrl = await uploadImage(fullBase64);
+            setUserData((prev) => ({ ...prev, hobbyImage: hobbyimageUrl }));
         }
     };
 
@@ -87,6 +108,9 @@ export default function EditProfileScreen() {
             const userRef = doc(db, "users", userId);
             let updatedData = { ...userData };
 
+            if (userData.profilePic) {
+                updatedData.profilePic = userData.profilePic;
+            }
             if (userData.hobbyImage) {
                 updatedData.hobbyImage = userData.hobbyImage;
             }
@@ -152,15 +176,29 @@ export default function EditProfileScreen() {
             <View style={styles.hobbyimagecontainer}>
                 <TouchableOpacity onPress={pickHobbyImage}>
                     {userData.hobbyImage ? (
-                        <Image source={{ uri: userData.hobbyImage }} style={styles.mainPic} />
+                        <View style={styles.mainImageContainer}>
+
+                            <Image source={{ uri: userData.hobbyImage }} style={styles.mainPic} />
+                            <Pressable style={styles.button} onPress={pickHobbyImage}>
+                                <Text style={styles.buttonLabel}>Change Main Image</Text>
+                            </Pressable>
+
+                        </View>
+
                     ) : (
-                        <Image source={require("@/assets/images/art-hobby.jpg")} style={styles.mainPic} />
+                        <View style={styles.mainImageContainer}>
+                            <Pressable style={styles.button} onPress={pickHobbyImage}>
+                                <Text style={styles.buttonLabel}>Add Main Image</Text>
+                            </Pressable>
+                            <Text style={styles.infodetails}>Choose an image that best represents your personality or hobby! </Text>
+
+
+                        </View>
+
                     )}
                 </TouchableOpacity>
-                <Pressable style={styles.button} onPress={pickHobbyImage}>
-                    <Text style={styles.buttonLabel}>Change Main Image</Text>
-                </Pressable>
-                <Text style={styles.infodetails}>Choose an image that best represents your personality or hobby! </Text>
+
+
 
 
             </View>
@@ -204,7 +242,7 @@ const styles = StyleSheet.create({
     },
     buttonLabel: {
         color: '#007AFF',
-        fontSize: 24,
+        fontSize: 22,
         fontWeight: 400,
 
     },
@@ -227,11 +265,18 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     hobbyimagecontainer: {
+        marginTop: 10,
         alignItems: 'center',
         width: 320,
         textAlign: 'center',
         marginBottom: 30,
+        paddingVertical: 30,
+        backgroundColor: '#F0EDF0',
+        borderRadius: 10,
 
+    },
+    mainImageContainer: {
+        alignItems: 'center',
     },
     mainPic: {
         width: 250,

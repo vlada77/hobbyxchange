@@ -237,7 +237,6 @@ const styles = StyleSheet.create({
     },
     mainImageContainer: {
         alignItems: 'center',
-
     },
     mainPic: {
         width: 250,
@@ -247,6 +246,7 @@ const styles = StyleSheet.create({
     },
     infodetails:
     {
+        padding: 5,
         fontSize: 14,
         color: '#919191',
         fontWeight: '400',
