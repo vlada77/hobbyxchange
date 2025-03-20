@@ -7,6 +7,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import FilledButton from "@/components/FilledButton";
+import { uploadImage } from '@/utils/uploadImage';
 
 
 export default function SignUpScreen() {
@@ -44,12 +45,8 @@ export default function SignUpScreen() {
     const uploadProfilePic = async (userId: string) => {
         if (!profilePic) return null;
 
-        const response = await fetch(profilePic);
-        const blob = await response.blob();
-        const storageRef = ref(storage, `profile_pictures/${userId}.jpg`);
-        await uploadBytes(storageRef, blob);
-
-        return await getDownloadURL(storageRef);
+        const profilePicUrl = await uploadImage(profilePic);
+        return profilePicUrl;
     };
 
 

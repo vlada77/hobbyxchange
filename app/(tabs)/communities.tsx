@@ -1,24 +1,31 @@
 import ImageViewer from '@/components/ImageViewer';
 import OutlinedButton from '@/components/OutlinedButton';
-import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { useRouter } from "expo-router";
 
 export default function CommunitiesScreen() {
+    const router = useRouter();
+
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false} >
             <View style={styles.communitiesContainer}>
                 <Text style={styles.textLabel}>My Communities</Text>
                 <View style={styles.communitiesGallery}>
+
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/art-hobby.jpg')} style={styles.imageStyle}></ImageViewer>
-                        <Text style={styles.communityName}>Art</Text>
+                        <TouchableOpacity onPress={() => router.push("/artCommunity")}>
+                            <ImageViewer imgSource={require('@/assets/images/art-community.jpg')} style={styles.imageStyle}></ImageViewer>
+                            <Text style={styles.communityName}>Art</Text>
+                        </TouchableOpacity>
+
                     </View>
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/art-hobby.jpg')} style={styles.imageStyle}></ImageViewer>
-                        <Text style={styles.communityName}>Crafts</Text>
+                        <ImageViewer imgSource={require('@/assets/images/sport-community.jpg')} style={styles.imageStyle}></ImageViewer>
+                        <Text style={styles.communityName}>Sport</Text>
                     </View>
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/art-hobby.jpg')} style={styles.imageStyle}></ImageViewer>
-                        <Text style={styles.communityName}>Painting</Text>
+                        <ImageViewer imgSource={require('@/assets/images/music-community.jpg')} style={styles.imageStyle}></ImageViewer>
+                        <Text style={styles.communityName}>Music</Text>
                     </View>
 
                 </View>
@@ -33,47 +40,47 @@ export default function CommunitiesScreen() {
                 <Text style={styles.textLabel}>Explore Communities</Text>
                 <View style={styles.communitiesGallery}>
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/art-hobby.jpg')} style={styles.imageStyle}></ImageViewer>
+                        <ImageViewer imgSource={require('@/assets/images/art-community.jpg')} style={styles.imageStyle}></ImageViewer>
                         <Text style={styles.communityName}>Art</Text>
                     </View>
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/art-hobby.jpg')} style={styles.imageStyle}></ImageViewer>
+                        <ImageViewer imgSource={require('@/assets/images/art-community.jpg')} style={styles.imageStyle}></ImageViewer>
                         <Text style={styles.communityName}>Crafts</Text>
                     </View>
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/art-hobby.jpg')} style={styles.imageStyle}></ImageViewer>
+                        <ImageViewer imgSource={require('@/assets/images/art-community.jpg')} style={styles.imageStyle}></ImageViewer>
                         <Text style={styles.communityName}>Painting</Text>
                     </View>
 
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/art-hobby.jpg')} style={styles.imageStyle}></ImageViewer>
+                        <ImageViewer imgSource={require('@/assets/images/art-community.jpg')} style={styles.imageStyle}></ImageViewer>
                         <Text style={styles.communityName}>Art</Text>
                     </View>
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/art-hobby.jpg')} style={styles.imageStyle}></ImageViewer>
+                        <ImageViewer imgSource={require('@/assets/images/art-community.jpg')} style={styles.imageStyle}></ImageViewer>
                         <Text style={styles.communityName}>Crafts</Text>
                     </View>
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/art-hobby.jpg')} style={styles.imageStyle}></ImageViewer>
+                        <ImageViewer imgSource={require('@/assets/images/art-community.jpg')} style={styles.imageStyle}></ImageViewer>
                         <Text style={styles.communityName}>Painting</Text>
                     </View>
 
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/art-hobby.jpg')} style={styles.imageStyle}></ImageViewer>
+                        <ImageViewer imgSource={require('@/assets/images/art-community.jpg')} style={styles.imageStyle}></ImageViewer>
                         <Text style={styles.communityName}>Art</Text>
                     </View>
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/art-hobby.jpg')} style={styles.imageStyle}></ImageViewer>
+                        <ImageViewer imgSource={require('@/assets/images/art-community.jpg')} style={styles.imageStyle}></ImageViewer>
                         <Text style={styles.communityName}>Crafts</Text>
                     </View>
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/art-hobby.jpg')} style={styles.imageStyle}></ImageViewer>
+                        <ImageViewer imgSource={require('@/assets/images/art-community.jpg')} style={styles.imageStyle}></ImageViewer>
                         <Text style={styles.communityName}>Painting</Text>
                     </View>
                 </View>
             </View>
 
-        </ScrollView>
+        </ScrollView >
     );
 }
 
