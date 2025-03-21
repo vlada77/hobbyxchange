@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
     avatarContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        width: 150,
     },
 
     avatarPicture: {
