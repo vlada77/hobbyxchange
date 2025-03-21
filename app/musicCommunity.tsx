@@ -15,23 +15,23 @@ import CommunityInfo from '@/components/CommunityInfo';
 const profiles = [
     {
         id: '1',
-        name: 'Alice Noah',
-        avatar: require('@/assets/images/profile-photo1.jpg'),
+        name: 'Andrew Newman',
+        avatar: require('@/assets/images/profile-photo9.jpg'),
     },
     {
         id: '2',
-        name: 'Andrea Polins',
-        avatar: require('@/assets/images/profile-photo7.jpg'),
+        name: 'John Doe',
+        avatar: require('@/assets/images/profile-photo2.jpg'),
     },
     {
         id: '3',
-        name: 'Alicia Smith',
-        avatar: require('@/assets/images/profile-photo3.jpg'),
+        name: 'Creed Neilan',
+        avatar: require('@/assets/images/profile-photo8.jpg'),
     },
     {
         id: '4',
-        name: 'Adriana Joseph',
-        avatar: require('@/assets/images/profile-photo4.jpg'),
+        name: 'Sara Guilar',
+        avatar: require('@/assets/images/profile-photo6.jpg'),
     },
     {
         id: '5',
@@ -41,13 +41,13 @@ const profiles = [
 ];
 
 
-export default function artCommunity() {
+export default function musicCommunity() {
     const router = useRouter();
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.communityNameContainer}>
-                <CommunityInfo avatarSource={require('@/assets/images/art-community.jpg')} name={"Art"} />
+                <CommunityInfo avatarSource={require('@/assets/images/music-community.jpg')} name={"Music"} />
             </View>
 
             <View style={styles.postContainer}>
@@ -57,12 +57,12 @@ export default function artCommunity() {
 
 
                 <View style={styles.imageContainer}>
-                    <ImageViewer imgSource={require('@/assets/images/sip-and-paint.jpg')} style={styles.mainImage} />
+                    <ImageViewer imgSource={require('@/assets/images/band-create.jpg')} style={styles.mainImage} />
                 </View>
 
                 <View style={styles.postTextContainer}>
-                    <Text style={styles.postTitle}>Sip and Paint meet-up</Text>
-                    <Text style={styles.postDescription}>Hi Everyone! I am an IT consultant, so I am working full-time in the office! I would really love if someone would like to meet up for a Sip and Paint evening! We could go to this cozy and chill cafe that allows people painting and meet ups for creatives ! </Text>
+                    <Text style={styles.postTitle}>Guitarist for Live Band</Text>
+                    <Text style={styles.postDescription}>Hi Everyone! I have a band and our guitarist can't make it to our live band! We are looking for another guitarist to join our team! </Text>
                 </View>
 
                 <View style={styles.buttonsContainer}>
@@ -90,12 +90,12 @@ export default function artCommunity() {
 
 
                 <View style={styles.imageContainer}>
-                    <ImageViewer imgSource={require('@/assets/images/art-picnic.jpg')} style={styles.mainImage} />
+                    <ImageViewer imgSource={require('@/assets/images/concert.jpg')} style={styles.mainImage} />
                 </View>
 
                 <View style={styles.postTextContainer}>
-                    <Text style={styles.postTitle}>Artsy Picnic</Text>
-                    <Text style={styles.postDescription}>Hi Everyone! I am organising a meet-up in Central Park today! React to this post if you are interested in coming to paint along! </Text>
+                    <Text style={styles.postTitle}>Lana del Rey Concert</Text>
+                    <Text style={styles.postDescription}>Hello! Is there anyone a fan of Lana del Rey! I want to go to her concert this Saturday and want to meet up with a group of people that want to party together! </Text>
                 </View>
 
                 <View style={styles.buttonsContainer}>
@@ -125,12 +125,12 @@ export default function artCommunity() {
 
 
                 <View style={styles.imageContainer}>
-                    <ImageViewer imgSource={require('@/assets/images/life-drawing.jpg')} style={styles.mainImage} />
+                    <ImageViewer imgSource={require('@/assets/images/live-band.jpg')} style={styles.mainImage} />
                 </View>
 
                 <View style={styles.postTextContainer}>
-                    <Text style={styles.postTitle}>Life Drawing</Text>
-                    <Text style={styles.postDescription}>Hi Everyone! I am thinking of going to this Life Drawing session but I am afraid of going along! Anyone interested? </Text>
+                    <Text style={styles.postTitle}>Live Band Tonight!</Text>
+                    <Text style={styles.postDescription}>We are performing tonight at Live Music Bar! Come along and come meet us! </Text>
                 </View>
 
                 <View style={styles.buttonsContainer}>
@@ -157,12 +157,12 @@ export default function artCommunity() {
 
 
                 <View style={styles.imageContainer}>
-                    <ImageViewer imgSource={require('@/assets/images/paint-model.jpg')} style={styles.mainImage} />
+                    <ImageViewer imgSource={require('@/assets/images/song-feedback.jpg')} style={styles.mainImage} />
                 </View>
 
                 <View style={styles.postTextContainer}>
-                    <Text style={styles.postTitle}>Meet and paint each other</Text>
-                    <Text style={styles.postDescription}>Hi Everyone! I am looking for a model that would like to sit for me while I paint! Would love to connect while I paint you! </Text>
+                    <Text style={styles.postTitle}>Song feedback</Text>
+                    <Text style={styles.postDescription}>Hi Everyone! I made a song and would love to listen to your feedback, here is the link: ...... ! </Text>
                 </View>
 
                 <View style={styles.buttonsContainer}>

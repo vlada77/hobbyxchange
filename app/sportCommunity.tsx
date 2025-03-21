@@ -15,13 +15,13 @@ import CommunityInfo from '@/components/CommunityInfo';
 const profiles = [
     {
         id: '1',
-        name: 'Alice Noah',
-        avatar: require('@/assets/images/profile-photo1.jpg'),
+        name: 'John Doe',
+        avatar: require('@/assets/images/profile-photo2.jpg'),
     },
     {
         id: '2',
-        name: 'Andrea Polins',
-        avatar: require('@/assets/images/profile-photo7.jpg'),
+        name: 'Alice Noah',
+        avatar: require('@/assets/images/profile-photo1.jpg'),
     },
     {
         id: '3',
@@ -41,13 +41,18 @@ const profiles = [
 ];
 
 
-export default function artCommunity() {
+export default function SportCommunity() {
     const router = useRouter();
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <View style={styles.communityNameContainer}>
-                <CommunityInfo avatarSource={require('@/assets/images/art-community.jpg')} name={"Art"} />
+
+            <View style={styles.communityHeader}>
+
+                <CommunityInfo avatarSource={require('@/assets/images/sport-community.jpg')} name={"Sports"} />
+
+                <OutlinedButton label="Join" width={80} onPress={() => alert("You pressed a button.")} />
+
             </View>
 
             <View style={styles.postContainer}>
@@ -57,12 +62,12 @@ export default function artCommunity() {
 
 
                 <View style={styles.imageContainer}>
-                    <ImageViewer imgSource={require('@/assets/images/sip-and-paint.jpg')} style={styles.mainImage} />
+                    <ImageViewer imgSource={require('@/assets/images/boxing.jpg')} style={styles.mainImage} />
                 </View>
 
                 <View style={styles.postTextContainer}>
-                    <Text style={styles.postTitle}>Sip and Paint meet-up</Text>
-                    <Text style={styles.postDescription}>Hi Everyone! I am an IT consultant, so I am working full-time in the office! I would really love if someone would like to meet up for a Sip and Paint evening! We could go to this cozy and chill cafe that allows people painting and meet ups for creatives ! </Text>
+                    <Text style={styles.postTitle}>Boxing buddy!</Text>
+                    <Text style={styles.postDescription}>Would anyone be up for booking a room at a gym and practice sparring?! </Text>
                 </View>
 
                 <View style={styles.buttonsContainer}>
@@ -90,12 +95,12 @@ export default function artCommunity() {
 
 
                 <View style={styles.imageContainer}>
-                    <ImageViewer imgSource={require('@/assets/images/art-picnic.jpg')} style={styles.mainImage} />
+                    <ImageViewer imgSource={require('@/assets/images/gym-buddy.jpg')} style={styles.mainImage} />
                 </View>
 
                 <View style={styles.postTextContainer}>
-                    <Text style={styles.postTitle}>Artsy Picnic</Text>
-                    <Text style={styles.postDescription}>Hi Everyone! I am organising a meet-up in Central Park today! React to this post if you are interested in coming to paint along! </Text>
+                    <Text style={styles.postTitle}>Looking for a gym buddy!</Text>
+                    <Text style={styles.postDescription}>Hi everyone! Is anyone else literally terrified by gym? I am so anxious going alone! Does anyone want to go together? </Text>
                 </View>
 
                 <View style={styles.buttonsContainer}>
@@ -125,12 +130,12 @@ export default function artCommunity() {
 
 
                 <View style={styles.imageContainer}>
-                    <ImageViewer imgSource={require('@/assets/images/life-drawing.jpg')} style={styles.mainImage} />
+                    <ImageViewer imgSource={require('@/assets/images/running-club.jpg')} style={styles.mainImage} />
                 </View>
 
                 <View style={styles.postTextContainer}>
-                    <Text style={styles.postTitle}>Life Drawing</Text>
-                    <Text style={styles.postDescription}>Hi Everyone! I am thinking of going to this Life Drawing session but I am afraid of going along! Anyone interested? </Text>
+                    <Text style={styles.postTitle}>Running meet-up: Central Park</Text>
+                    <Text style={styles.postDescription}>Hi! We're having our weekly running club gathering on Tuesday. Meet up-point: Central Park! Hope to see many of you there! </Text>
                 </View>
 
                 <View style={styles.buttonsContainer}>
@@ -150,36 +155,7 @@ export default function artCommunity() {
                 </View>
             </View>
 
-            <View style={styles.postContainer}>
-                <View style={styles.authorContainer}>
-                    <ProfileInfo avatarSource={profiles[3].avatar} name={profiles[3].name} />
-                </View>
 
-
-                <View style={styles.imageContainer}>
-                    <ImageViewer imgSource={require('@/assets/images/paint-model.jpg')} style={styles.mainImage} />
-                </View>
-
-                <View style={styles.postTextContainer}>
-                    <Text style={styles.postTitle}>Meet and paint each other</Text>
-                    <Text style={styles.postDescription}>Hi Everyone! I am looking for a model that would like to sit for me while I paint! Would love to connect while I paint you! </Text>
-                </View>
-
-                <View style={styles.buttonsContainer}>
-                    <View style={styles.iconsContainer}>
-                        <FontAwesome name="heart" size={20} color="#ccc" />
-                        <FontAwesome name="plus-circle" size={20} color="#ccc" />
-                        <FontAwesome name="comment" size={20} color="#ccc" />
-
-                    </View>
-                    <View style={styles.chatbutton}>
-
-                        <FilledButton icon="comment" label="Chat" onPress={() => alert('You pressed a button.')} />
-
-                    </View>
-                </View>
-
-            </View>
 
         </ScrollView >
     );
@@ -190,6 +166,14 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
+    },
+
+
+    communityHeader: {
+        width: 320,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 20,
     },
 
     communityNameContainer: {

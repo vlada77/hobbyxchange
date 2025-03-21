@@ -13,19 +13,25 @@ export default function CommunitiesScreen() {
                 <View style={styles.communitiesGallery}>
 
                     <View style={styles.communityDetails}>
-                        <TouchableOpacity onPress={() => router.push("/artCommunity")}>
+                        <TouchableOpacity onPress={() => router.push("/artCommunity")} style={styles.communityallign}>
                             <ImageViewer imgSource={require('@/assets/images/art-community.jpg')} style={styles.imageStyle}></ImageViewer>
                             <Text style={styles.communityName}>Art</Text>
                         </TouchableOpacity>
 
                     </View>
+
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/sport-community.jpg')} style={styles.imageStyle}></ImageViewer>
-                        <Text style={styles.communityName}>Sport</Text>
+                        <TouchableOpacity onPress={() => router.push("/musicCommunity")} style={styles.communityallign}>
+                            <ImageViewer imgSource={require('@/assets/images/music-community.jpg')} style={styles.imageStyle}></ImageViewer>
+                            <Text style={styles.communityName}>Music</Text>
+
+
+                        </TouchableOpacity>
+
                     </View>
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/music-community.jpg')} style={styles.imageStyle}></ImageViewer>
-                        <Text style={styles.communityName}>Music</Text>
+                        <ImageViewer imgSource={require('@/assets/images/design-community.jpg')} style={styles.imageStyle}></ImageViewer>
+                        <Text style={styles.communityName}>Art</Text>
                     </View>
 
                 </View>
@@ -40,15 +46,18 @@ export default function CommunitiesScreen() {
                 <Text style={styles.textLabel}>Explore Communities</Text>
                 <View style={styles.communitiesGallery}>
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/art-community.jpg')} style={styles.imageStyle}></ImageViewer>
-                        <Text style={styles.communityName}>Art</Text>
+                        <TouchableOpacity onPress={() => router.push("/sportCommunity")} style={styles.communityallign}>
+                            <ImageViewer imgSource={require('@/assets/images/sport-community.jpg')} style={styles.imageStyle}></ImageViewer>
+                            <Text style={styles.communityName}>Sport</Text>
+                        </TouchableOpacity>
+
                     </View>
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/art-community.jpg')} style={styles.imageStyle}></ImageViewer>
+                        <ImageViewer imgSource={require('@/assets/images/hiking-community.jpg')} style={styles.imageStyle}></ImageViewer>
                         <Text style={styles.communityName}>Crafts</Text>
                     </View>
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/art-community.jpg')} style={styles.imageStyle}></ImageViewer>
+                        <ImageViewer imgSource={require('@/assets/images/social-dancing-community.jpg')} style={styles.imageStyle}></ImageViewer>
                         <Text style={styles.communityName}>Painting</Text>
                     </View>
 
@@ -57,20 +66,20 @@ export default function CommunitiesScreen() {
                         <Text style={styles.communityName}>Art</Text>
                     </View>
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/art-community.jpg')} style={styles.imageStyle}></ImageViewer>
+                        <ImageViewer imgSource={require('@/assets/images/piano-community.jpg')} style={styles.imageStyle}></ImageViewer>
                         <Text style={styles.communityName}>Crafts</Text>
                     </View>
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/art-community.jpg')} style={styles.imageStyle}></ImageViewer>
+                        <ImageViewer imgSource={require('@/assets/images/gym-community.jpg')} style={styles.imageStyle}></ImageViewer>
                         <Text style={styles.communityName}>Painting</Text>
                     </View>
 
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/art-community.jpg')} style={styles.imageStyle}></ImageViewer>
+                        <ImageViewer imgSource={require('@/assets/images/crocheting-community.jpg')} style={styles.imageStyle}></ImageViewer>
                         <Text style={styles.communityName}>Art</Text>
                     </View>
                     <View style={styles.communityDetails}>
-                        <ImageViewer imgSource={require('@/assets/images/art-community.jpg')} style={styles.imageStyle}></ImageViewer>
+                        <ImageViewer imgSource={require('@/assets/images/photography-community.jpg')} style={styles.imageStyle}></ImageViewer>
                         <Text style={styles.communityName}>Crafts</Text>
                     </View>
                     <View style={styles.communityDetails}>
@@ -94,7 +103,7 @@ const styles = StyleSheet.create({
 
     textLabel: {
         marginLeft: 5,
-        fontSize: 18,
+        fontSize: 22,
         fontWeight: '500',
         marginVertical: 5,
 
@@ -114,6 +123,10 @@ const styles = StyleSheet.create({
         marginVertical: 6,
         flexDirection: 'column',
         alignItems: 'center',
+    },
+    communityallign: {
+        alignItems: 'center',
+
     },
     imageStyle: {
         width: 90,
