@@ -21,7 +21,9 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack>
+    <Stack screenOptions={{
+      headerBackTitle: "Back", // 👈 Default back title for all screens
+    }}>
       {isAuthenticated ? (
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       ) : (
@@ -29,6 +31,7 @@ export default function RootLayout() {
 
       )}
       <Stack.Screen name="+not-found" />
+
     </Stack>
   );
 }

@@ -24,23 +24,15 @@ export default function Messages() {
                 const chatData = docSnapshot.data();
                 const currentUserId = auth.currentUser?.uid;
 
-                // Find the other user ID by excluding the current user
                 const otherUserId = chatData.userIds.find((id: string) => id !== currentUserId);
 
-                // Get the other user's profile information from the chat document
-                console.log("OtherUserId:", otherUserId);
-                console.log("CurrentUserId:", currentUserId);
-
                 const otherUser = currentUserId === chatData.user1?.id ? chatData.user2 : chatData.user1;
-
-                console.log("OtherUser:", otherUser);
-                console.log("CurrentUser:", currentUserId);
 
                 return {
                     chatId: docSnapshot.id,
                     lastMessage: chatData.lastMessage || "No messages yet",
                     timestamp: chatData.timestamp,
-                    otherUser, // Add the other user's profile info from the chat document
+                    otherUser,
                 };
             });
 

@@ -11,6 +11,9 @@ import InterestButton from '@/components/InterestButton';
 import ProfileInfo from '@/components/ProfileInfo';
 import CommunityInfo from '@/components/CommunityInfo';
 
+import { useLayoutEffect } from 'react';
+import { useNavigation } from 'expo-router';
+
 
 const profiles = [
     {
@@ -43,6 +46,13 @@ const profiles = [
 
 export default function artCommunity() {
     const router = useRouter();
+    const navigation = useNavigation();
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTitle: "Art Community",
+        });
+    }, [navigation]);
 
     return (
         <ScrollView contentContainerStyle={styles.container}>

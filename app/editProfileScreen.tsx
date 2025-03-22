@@ -8,12 +8,23 @@ import { useRouter } from "expo-router";
 import FilledButton from "@/components/FilledButton";
 import { uploadImage } from '@/utils/uploadImage';
 import * as FileSystem from "expo-file-system";
+import { useLayoutEffect } from 'react';
+import { useNavigation } from 'expo-router';
 
 export default function EditProfileScreen() {
     const router = useRouter();
     const userId = auth.currentUser?.uid;
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+
+    const navigation = useNavigation();
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTitle: "Edit Profile",
+        });
+    }, [navigation]);
+
 
     const [userData, setUserData] = useState({
         email: "",
@@ -193,7 +204,6 @@ export default function EditProfileScreen() {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.header}>Edit Profile</Text>
 
             <TouchableOpacity onPress={pickImage}>
                 {userData.profilePic ? (

@@ -14,6 +14,14 @@ import { useLayoutEffect } from "react";
 export default function ChatScreen() {
     const params = useLocalSearchParams();
     const { chatId } = params;
+    const navigation = useNavigation();
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTitle: "Chat",
+            headerBackTitle: "Messages", // Only changes back button title in this screen
+        });
+    }, [navigation]);
 
     type Message = {
         id: string;
