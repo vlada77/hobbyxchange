@@ -8,11 +8,13 @@ import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import FilledButton from "@/components/FilledButton";
 import { uploadImage } from '@/utils/uploadImage';
+import * as FileSystem from "expo-file-system";
 
 
 export default function SignUpScreen() {
     const router = useRouter();
     const storage = getStorage();
+    const DEFAULT_PROFILE_PIC = require('@/assets/images/default-profile-pic.jpg')
 
     // Form State
     const [email, setEmail] = useState("");
@@ -28,18 +30,42 @@ export default function SignUpScreen() {
     const [profilePic, setProfilePic] = useState<string | null>(null);
     const [error, setError] = useState("");
 
+
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [1, 1],
-            quality: 1,
+            quality: 0.5,
         });
 
         if (!result.canceled) {
-            setProfilePic(result.assets[0].uri);
+            const imageUri = result.assets[0].uri;
+
+            const base64Image = await FileSystem.readAsStringAsync(imageUri, {
+                encoding: FileSystem.EncodingType.Base64,
+            });
+
+            const fullBase64 = `data:image/jpeg;base64,${base64Image}`;
+
+            const imageUrl = await uploadImage(fullBase64);
+            setProfilePic(imageUrl);
         }
     };
+
+
+    // const pickImage = async () => {
+    //     let result = await ImagePicker.launchImageLibraryAsync({
+    //         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //         allowsEditing: true,
+    //         aspect: [1, 1],
+    //         quality: 1,
+    //     });
+
+    //     if (!result.canceled) {
+    //         setProfilePic(result.assets[0].uri);
+    //     }
+    // };
 
 
     const uploadProfilePic = async (userId: string) => {
@@ -59,9 +85,6 @@ export default function SignUpScreen() {
             console.log("Account created for:", user.uid);
 
 
-            const profilePicUrl = await uploadProfilePic(user.uid);
-
-
             await setDoc(doc(db, "users", user.uid), {
                 id: user.uid,
                 email,
@@ -73,8 +96,8 @@ export default function SignUpScreen() {
                 whatIWant,
                 whatIOffer,
                 interests: interests.split(","),
-                hobbyImage: profilePicUrl || null,
-                profilePic: profilePicUrl || null,
+                hobbyImage: profilePic || DEFAULT_PROFILE_PIC,
+                profilePic: profilePic || null,
                 isProfileComplete: true,
                 createdAt: new Date(),
             });

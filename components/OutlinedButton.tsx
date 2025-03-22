@@ -28,7 +28,7 @@ export default function OutlinedButton({ label, icon, width = 150, height = 40, 
 
 const styles = StyleSheet.create({
     buttonContainer: {
-        margin: 10,
+        margin: 5,
         alignItems: 'center',
         borderRadius: 100,
     },

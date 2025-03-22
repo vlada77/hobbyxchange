@@ -2,28 +2,65 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'rea
 import { useRouter } from 'expo-router';
 import { useState, useEffect } from 'react';
 import { db, auth } from '@/firebase/firebaseConfig';
-import { collection, getDocs, query } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { fetchUserChats } from "@/utils/fetchUserChats";
 import ProfileInfo from '@/components/ProfileInfo';
+import { doc, getDoc, updateDoc, onSnapshot, orderBy } from "firebase/firestore";
+
 export default function Messages() {
     const router = useRouter();
     const [chats, setChats] = useState<any[]>([]);
 
     useEffect(() => {
-        const loadChats = async () => {
-            const chatData = await fetchUserChats();
-            setChats(chatData);
-        };
+        if (!auth.currentUser) return; // Ensure the user is logged in
 
-        loadChats();
+        const chatRef = collection(db, "chats");
+
+        // Only fetch chats where the current user is part of the `userIds` array
+        const q = query(chatRef, where("userIds", "array-contains", auth.currentUser.uid), orderBy("timestamp", "desc"));
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const fetchedChats = snapshot.docs.map((docSnapshot) => {
+                const chatData = docSnapshot.data();
+                const currentUserId = auth.currentUser?.uid;
+
+                // Find the other user ID by excluding the current user
+                const otherUserId = chatData.userIds.find((id: string) => id !== currentUserId);
+
+                // Get the other user's profile information from the chat document
+                console.log("OtherUserId:", otherUserId);
+                console.log("CurrentUserId:", currentUserId);
+
+                const otherUser = currentUserId === chatData.user1?.id ? chatData.user2 : chatData.user1;
+
+                console.log("OtherUser:", otherUser);
+                console.log("CurrentUser:", currentUserId);
+
+                return {
+                    chatId: docSnapshot.id,
+                    lastMessage: chatData.lastMessage || "No messages yet",
+                    timestamp: chatData.timestamp,
+                    otherUser, // Add the other user's profile info from the chat document
+                };
+            });
+
+            setChats(fetchedChats.filter(Boolean));
+        });
+
+        return () => unsubscribe();
     }, []);
 
     return (
-        <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false} >
+        <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
             {chats.length === 0 ? (
                 <View style={{ marginTop: 150, padding: 20, alignItems: 'center', justifyContent: 'center' }}>
-                    <Image source={require('@/assets/images/waiting.jpg')} style={{ width: 180, height: 180, padding: 20, marginVertical: 10, borderRadius: 50, }}></Image>
-                    <Text style={{ textAlign: 'center', fontWeight: '200', fontSize: 16, }}> No conversations yet... Start chatting with someone!</Text>
+                    <Image
+                        source={require('@/assets/images/waiting.jpg')}
+                        style={{ width: 180, height: 180, padding: 20, marginVertical: 10, borderRadius: 50 }}
+                    />
+                    <Text style={{ textAlign: 'center', fontWeight: '200', fontSize: 16 }}>
+                        No conversations yet... Start chatting with someone!
+                    </Text>
                 </View>
             ) : (
                 chats.map((chat) => (
@@ -35,7 +72,11 @@ export default function Messages() {
                         <View style={styles.conversationContent}>
                             <View style={styles.textContainer}>
                                 <ProfileInfo avatarSource={chat.otherUser.profilePic} name={chat.otherUser.name} />
-                                <Text style={styles.lastMessage}>{chat.lastMessage}</Text>
+                                {chat.lastMessage ? (
+                                    <Text style={styles.lastMessage}>Last Message: {chat.lastMessage}</Text>
+                                ) : (
+                                    <Text style={styles.lastMessage}>No Messages yet!</Text>
+                                )}
                             </View>
                         </View>
                     </TouchableOpacity>

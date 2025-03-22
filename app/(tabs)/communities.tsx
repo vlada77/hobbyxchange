@@ -31,7 +31,7 @@ export default function CommunitiesScreen() {
                     </View>
                     <View style={styles.communityDetails}>
                         <ImageViewer imgSource={require('@/assets/images/design-community.jpg')} style={styles.imageStyle}></ImageViewer>
-                        <Text style={styles.communityName}>Art</Text>
+                        <Text style={styles.communityName}>Design</Text>
                     </View>
 
                 </View>
