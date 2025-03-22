@@ -12,11 +12,10 @@ export default function Messages() {
     const [chats, setChats] = useState<any[]>([]);
 
     useEffect(() => {
-        if (!auth.currentUser) return; // Ensure the user is logged in
+        if (!auth.currentUser) return;
 
         const chatRef = collection(db, "chats");
 
-        // Only fetch chats where the current user is part of the `userIds` array
         const q = query(chatRef, where("userIds", "array-contains", auth.currentUser.uid), orderBy("timestamp", "desc"));
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -84,13 +83,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         padding: 20,
         alignItems: 'center',
-    },
-    header: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginTop: 10,
-        marginBottom: 20,
-        width: 320,
     },
 
     conversationItem: {
