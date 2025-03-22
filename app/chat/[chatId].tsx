@@ -83,7 +83,6 @@ export default function ChatScreen() {
     const sendMessage = async () => {
         if (!auth.currentUser || !newMessage.trim()) return;
 
-        // Add the new message to Firestore
         await addDoc(collection(db, `chats/${chatId}/messages`), {
             senderId: auth.currentUser.uid,
             text: newMessage,
@@ -95,18 +94,17 @@ export default function ChatScreen() {
             return;
         }
 
-        // Update the lastMessage and timestamp in the chat document
         const chatRef = doc(db, "chats", chatId);
         console.log(newMessage);
         console.log(chatRef);
 
         await updateDoc(chatRef, {
             lastMessage: newMessage,
-            timestamp: serverTimestamp(), // Update the timestamp of the chat
+            timestamp: serverTimestamp(),
         });
         console.log("caca");
 
-        setNewMessage(""); // Clear the input field
+        setNewMessage("");
     };
 
     return (
@@ -164,7 +162,6 @@ export default function ChatScreen() {
 const styles = StyleSheet.create({
 
     container: {
-        flexGrow: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
         padding: 20,
@@ -180,7 +177,7 @@ const styles = StyleSheet.create({
 
     chatContainer: {
         width: 320,
-        flex: 1,
+        flexGrow: 1,
         marginBottom: 20,
     },
 
