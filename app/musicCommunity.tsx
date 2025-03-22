@@ -12,6 +12,10 @@ import ProfileInfo from '@/components/ProfileInfo';
 import CommunityInfo from '@/components/CommunityInfo';
 
 
+import { useLayoutEffect } from 'react';
+import { useNavigation } from 'expo-router';
+
+
 const profiles = [
     {
         id: '1',
@@ -43,6 +47,14 @@ const profiles = [
 
 export default function musicCommunity() {
     const router = useRouter();
+
+    const navigation = useNavigation();
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTitle: "Music Community",
+        });
+    }, [navigation]);
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
