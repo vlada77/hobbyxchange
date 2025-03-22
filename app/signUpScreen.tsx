@@ -53,21 +53,6 @@ export default function SignUpScreen() {
         }
     };
 
-
-    // const pickImage = async () => {
-    //     let result = await ImagePicker.launchImageLibraryAsync({
-    //         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //         allowsEditing: true,
-    //         aspect: [1, 1],
-    //         quality: 1,
-    //     });
-
-    //     if (!result.canceled) {
-    //         setProfilePic(result.assets[0].uri);
-    //     }
-    // };
-
-
     const uploadProfilePic = async (userId: string) => {
         if (!profilePic) return null;
 
