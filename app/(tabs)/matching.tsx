@@ -114,9 +114,9 @@ export default function MatchingPage() {
 
                     try {
                         await setDoc(chatRef, {
-                            userIds: [currentUserId, randomUserId], // Array of user IDs
-                            lastMessage: "",  // Initially no message
-                            timestamp: serverTimestamp(),  // Firestore timestamp
+                            userIds: [currentUserId, randomUserId],
+                            lastMessage: "",
+                            timestamp: serverTimestamp(),
                             user1: {
                                 id: currentUserId,
                                 name: currentUserData.name,
@@ -149,13 +149,18 @@ export default function MatchingPage() {
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
             {randomUser ? (
-                <View style={styles.profileContainer}>
-                    {randomUser?.profilePic ? (
-                        <ProfileInfo avatarSource={randomUser.profilePic} name={randomUser.name} />
-                    ) : (
-                        <ProfileInfo avatarSource={require('@/assets/images/default-profile-pic.jpg')} name={randomUser.name} />
+                <View style={styles.container}>
 
-                    )}
+                    <View style={styles.profileContainer}>
+                        {randomUser.profilePic ? (
+                            <ProfileInfo avatarSource={{ uri: randomUser.profilePic }} name={randomUser.name} />
+                        ) : (
+                            <ProfileInfo avatarSource={require('@/assets/images/default-profile-pic.jpg')} name={randomUser.name} />
+                        )}
+                        <OutlinedButton icon="refresh" label="Next" height={34} width={100} onPress={() => alert("You pressed a button.")} />
+
+                    </View>
+
                     <View style={styles.imageContainer}>
                         {randomUser?.hobbyImage && (
                             <ImageViewer imgSource={randomUser.hobbyImage} />
@@ -187,9 +192,11 @@ export default function MatchingPage() {
                     </View>
 
                     <View style={styles.buttonsContainer}>
-                        <OutlinedButton label="View full profile" width={210} onPress={() => alert('You pressed a button.')} />
-                        <FilledButton icon="comment" label="Chat" onPress={handleChat} />
+
+                        <FilledButton icon="comment" label="Start Chat" width={320} onPress={handleChat} />
                     </View>
+
+
                 </View>
             ) : (
                 <Text>Loading...</Text>
@@ -204,16 +211,30 @@ const styles = StyleSheet.create({
     scrollContainer: {
         flexGrow: 1,
         backgroundColor: '#fff',
-        alignItems: 'center',
         padding: 20,
+        alignItems: 'center',
     },
 
+    container: {
+        width: 320,
+        alignItems: 'center',
+    },
+
+    nextbutton: {
+        padding: 0,
+        marginTop: 10,
+        width: 340,
+        alignItems: 'flex-end',
+
+    },
 
     profileContainer: {
+        alignItems: 'center',
         width: 320,
-        alignItems: 'flex-start',
-        marginTop: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
+
 
 
     imageContainer: {
@@ -272,9 +293,7 @@ const styles = StyleSheet.create({
 
     buttonsContainer: {
         width: 320,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginTop: 10,
+        alignItems: 'flex-end',
+        marginTop: 15,
     },
 });

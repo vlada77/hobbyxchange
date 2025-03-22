@@ -118,7 +118,7 @@ export default function ChatScreen() {
                         ) : (
                             <ProfileInfo avatarSource={require('@/assets/images/default-profile-pic.jpg')} name={otherUser.name} />
                         )}
-                        <OutlinedButton icon="flag-o" label=" Report" height={34} borderColor="#993333" color="#A65A5A" onPress={() => alert("You pressed a button.")} />
+                        <OutlinedButton icon="flag-o" label="Report" height={34} borderColor="#993333" color="#A65A5A" onPress={() => alert("You pressed a button.")} />
                     </View>
 
 

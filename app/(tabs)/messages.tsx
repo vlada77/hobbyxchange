@@ -86,7 +86,6 @@ const styles = StyleSheet.create({
     },
 
     conversationItem: {
-        marginTop: 10,
         flexDirection: 'row',
         width: 320,
         alignItems: 'flex-start',

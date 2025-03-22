@@ -8,7 +8,7 @@ type Props = {
 
 export default function ProfileInfo({ avatarSource, name }: Props) {
     return (
-        <View style={styles.avatarContainer}>
+        <View style={styles.Container}>
             <Image source={avatarSource} style={styles.avatarPicture} />
             <Text style={styles.profileName}>{name}</Text>
         </View>
@@ -16,7 +16,8 @@ export default function ProfileInfo({ avatarSource, name }: Props) {
 }
 
 const styles = StyleSheet.create({
-    avatarContainer: {
+    Container: {
+        margin: 5,
         flexDirection: 'row',
         alignItems: 'center',
     },
