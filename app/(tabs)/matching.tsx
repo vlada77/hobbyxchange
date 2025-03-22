@@ -47,9 +47,10 @@ export default function MatchingPage() {
                     const allUsers = querySnapshot.docs.map(doc => doc.data());
 
                     const users = allUsers.filter(user =>
-                        user.uid !== auth.currentUser?.uid &&
+                        user.id !== auth.currentUser?.uid &&
                         user.location === currentUserLocation
-                    ); 
+
+                    );
 
                     if (users.length > 0) {
                         const randomUser = users[Math.floor(Math.random() * users.length)];
@@ -69,34 +70,111 @@ export default function MatchingPage() {
         fetchUsers();
     }, [currentUserId]);
 
+
     const handleChat = async () => {
-        if (!randomUser) return;
-
-        const chatId = [currentUserId, randomUser.uid].sort().join("_");
-
-        const chatRef = doc(db, "chats", chatId);
-        const chatSnap = await getDoc(chatRef);
-
-        if (!chatSnap.exists()) {
-            await setDoc(chatRef, {
-                userIds: [currentUserId, randomUser.uid],
-                lastMessage: "",
-                timestamp: new Date(),
-            });
+        if (!randomUser || !auth.currentUser) {
+            console.log("No random user or no current user");
+            return;
         }
 
-        router.push(`/chat/${chatId}`);
+        const currentUserId = auth.currentUser.uid;
+        const randomUserId = randomUser?.id;
+
+        if (!currentUserId || !randomUserId) {
+            console.log("One of the user IDs is undefined.");
+            return;
+        }
+
+        const chatId = [currentUserId, randomUserId].sort().join("_");
+        console.log("Generated Chat ID:", chatId);
+
+        const chatRef = doc(db, "chats", chatId);
+        console.log("chatRef path:", chatRef.path);
+
+        try {
+            // Attempt to get the chat document
+            const chatSnap = await getDoc(chatRef);
+            console.log("chatSnap exists:", chatSnap.exists());
+
+            if (!chatSnap.exists()) {
+                console.log("Creating new chat...");
+
+                // Get current user and random user data (name, profilePic)
+                const currentUserRef = doc(db, "users", currentUserId);
+                const randomUserRef = doc(db, "users", randomUserId);
+
+                const [currentUserSnap, randomUserSnap] = await Promise.all([
+                    getDoc(currentUserRef),
+                    getDoc(randomUserRef),
+                ]);
+
+                if (currentUserSnap.exists() && randomUserSnap.exists()) {
+                    const currentUserData = currentUserSnap.data();
+                    const randomUserData = randomUserSnap.data();
+
+                    try {
+                        await setDoc(chatRef, {
+                            userIds: [currentUserId, randomUserId], // Array of user IDs
+                            lastMessage: "",  // Initially no message
+                            timestamp: serverTimestamp(),  // Firestore timestamp
+                            user1: {
+                                id: currentUserId,
+                                name: currentUserData.name,
+                                profilePic: currentUserData.profilePic || null,
+                            },
+                            user2: {
+                                id: randomUserId,
+                                name: randomUserData.name,
+                                profilePic: randomUserData.profilePic || null,
+                            },
+                        });
+
+                        console.log("Chat successfully created!");
+                    } catch (error) {
+                        console.error("Error creating chat:", error);
+                    }
+                } else {
+                    console.log("One or both users do not exist.");
+                }
+            } else {
+                console.log("Chat already exists.");
+            }
+
+            router.push(`/chat/${chatId}`);
+        } catch (error) {
+            console.error("Error fetching chat document:", error);
+        }
     };
 
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
             {randomUser ? (
                 <View style={styles.profileContainer}>
-                    <ProfileInfo avatarSource={randomUser.profilePic} name={randomUser.name} />
+                    {randomUser?.profilePic ? (
+                        <ProfileInfo avatarSource={randomUser.profilePic} name={randomUser.name} />
+                    ) : (
+                        <ProfileInfo avatarSource={require('@/assets/images/default-profile-pic.jpg')} name={randomUser.name} />
+
+                    )}
                     <View style={styles.imageContainer}>
-                        {randomUser?.mainImage && (
-                            <ImageViewer imgSource={randomUser.mainImage} />
+                        {randomUser?.hobbyImage && (
+                            <ImageViewer imgSource={randomUser.hobbyImage} />
                         )}
+                    </View>
+
+                    <View style={styles.tradeContainer}>
+                        <View style={styles.textContainer}>
+                            <Text style={styles.textLabel}>What I Want:</Text>
+                            <View style={styles.textValue}>
+                                <Text style={styles.text}>{randomUser.whatIWant}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.textContainer}>
+                            <Text style={styles.textLabel}>What I Offer:</Text>
+                            <View style={styles.textValue}>
+                                <Text style={styles.text}>{randomUser.whatIOffer}</Text>
+                            </View>
+                        </View>
                     </View>
 
                     <View style={styles.interestsContainer}>
@@ -105,15 +183,11 @@ export default function MatchingPage() {
                             {randomUser?.interests.map((interest: string, index: number) => (
                                 <InterestButton key={index} label={interest} />
                             ))}
-
-                            {randomUser?.interests.map((interest: string, index: number) => (
-                                <InterestButton key={index} label={interest} />
-                            ))}
                         </View>
                     </View>
 
                     <View style={styles.buttonsContainer}>
-                        <OutlinedButton label="View full profile" width={220} onPress={() => alert('You pressed a button.')} />
+                        <OutlinedButton label="View full profile" width={210} onPress={() => alert('You pressed a button.')} />
                         <FilledButton icon="comment" label="Chat" onPress={handleChat} />
                     </View>
                 </View>
@@ -165,6 +239,7 @@ const styles = StyleSheet.create({
     },
     textValue: {
         width: 150,
+        height: 60,
         paddingVertical: 2,
         borderRadius: 2,
         marginTop: 10,
@@ -196,7 +271,10 @@ const styles = StyleSheet.create({
 
 
     buttonsContainer: {
+        width: 320,
         flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         marginTop: 10,
     },
 });

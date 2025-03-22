@@ -21,6 +21,7 @@ export default function ProfileScreen() {
                 const userRef = doc(db, "users", auth.currentUser.uid);
                 const userSnap = await getDoc(userRef);
 
+
                 if (userSnap.exists()) {
                     setUserData(userSnap.data());
                 } else {
@@ -49,7 +50,7 @@ export default function ProfileScreen() {
 
                     <View style={styles.profileContainer}>
                         {userData.profilePic ? (
-                            <Image source={userData.profilePic} style={styles.image} ></Image>
+                            <Image source={{ uri: userData.profilePic }} style={styles.image} ></Image>
                         ) : (
                             <Image source={require('@/assets/images/default-profile-pic.jpg')} style={styles.image} ></Image>
 

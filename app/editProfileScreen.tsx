@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Image, ScrollView, TouchableOpacity, Pressable } from "react-native";
 import { auth, db, storage } from "@/firebase/firebaseConfig";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import FilledButton from "@/components/FilledButton";
@@ -57,6 +57,39 @@ export default function EditProfileScreen() {
         }));
     };
 
+
+    const selectProfileImage = async () => {
+        const options = ["Take Photo", "Choose from Gallery", "Cancel"];
+
+        Alert.alert("Upload Image", "Choose an option", [
+            { text: options[0], onPress: takeProfilePhoto },
+            { text: options[1], onPress: pickImage },
+            { text: options[2], style: "cancel" },
+        ]);
+    };
+
+    const takeProfilePhoto = async () => {
+        let result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 0.5,
+        });
+
+        if (!result.canceled) {
+            const imageUri = result.assets[0].uri;
+
+            const base64Image = await FileSystem.readAsStringAsync(imageUri, {
+                encoding: FileSystem.EncodingType.Base64,
+            });
+
+            const fullBase64 = `data:image/jpeg;base64,${base64Image}`;
+
+            const imageUrl = await uploadImage(fullBase64);
+            setUserData((prev) => ({ ...prev, profilePic: imageUrl }));
+        }
+    };
+
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -78,6 +111,40 @@ export default function EditProfileScreen() {
             setUserData((prev) => ({ ...prev, profilePic: imageUrl }));
         }
     };
+
+
+    const selectHobbyImage = async () => {
+        const options = ["Take Photo", "Choose from Gallery", "Cancel"];
+
+        Alert.alert("Upload Image", "Choose an option", [
+            { text: options[0], onPress: takeHobbyPhoto },
+            { text: options[1], onPress: pickHobbyImage },
+            { text: options[2], style: "cancel" },
+        ]);
+    };
+
+    const takeHobbyPhoto = async () => {
+        let result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 0.5,
+        });
+
+        if (!result.canceled) {
+            const imageUri = result.assets[0].uri;
+
+            const base64Image = await FileSystem.readAsStringAsync(imageUri, {
+                encoding: FileSystem.EncodingType.Base64,
+            });
+
+            const fullBase64 = `data:image/jpeg;base64,${base64Image}`;
+
+            const imageUrl = await uploadImage(fullBase64);
+            setUserData((prev) => ({ ...prev, hobbyImage: imageUrl }));
+        }
+    };
+
 
     const pickHobbyImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -135,7 +202,7 @@ export default function EditProfileScreen() {
                     <Image source={require("@/assets/images/default-profile-pic.jpg")} style={styles.profilePic} />
                 )}
             </TouchableOpacity>
-            <Button title="Change Profile Picture" onPress={pickImage} />
+            <Button title="Change Profile Picture" onPress={selectProfileImage} />
 
             <View style={styles.infocontainer}>
                 <Text style={styles.textLabel}>Name:</Text>
@@ -174,12 +241,12 @@ export default function EditProfileScreen() {
 
 
             <View style={styles.hobbyimagecontainer}>
-                <TouchableOpacity onPress={pickHobbyImage}>
+                <TouchableOpacity onPress={selectHobbyImage}>
                     {userData.hobbyImage ? (
                         <View style={styles.mainImageContainer}>
 
                             <Image source={{ uri: userData.hobbyImage }} style={styles.mainPic} />
-                            <Pressable style={styles.button} onPress={pickHobbyImage}>
+                            <Pressable style={styles.button} onPress={selectHobbyImage}>
                                 <Text style={styles.buttonLabel}>Change Main Image</Text>
                             </Pressable>
 
@@ -187,7 +254,7 @@ export default function EditProfileScreen() {
 
                     ) : (
                         <View style={styles.mainImageContainer}>
-                            <Pressable style={styles.button} onPress={pickHobbyImage}>
+                            <Pressable style={styles.button} onPress={selectHobbyImage}>
                                 <Text style={styles.buttonLabel}>Add Main Image</Text>
                             </Pressable>
                             <Text style={styles.infodetails}>Choose an image that best represents your personality or hobby! </Text>
