@@ -26,7 +26,6 @@ export default function viewFullProfileScreen() {
     const router = useRouter();
     const params = useLocalSearchParams();
     const { userId } = params;
-    console.log(userId);
 
     const [userData, setUserData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -41,8 +40,6 @@ export default function viewFullProfileScreen() {
             if (userId) {
                 const userRef = doc(db, "users", userId);
                 const userSnap = await getDoc(userRef);
-
-                console.log(userRef);
 
 
                 if (userSnap.exists()) {
