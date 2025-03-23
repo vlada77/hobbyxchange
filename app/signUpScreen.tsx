@@ -154,7 +154,13 @@ export default function SignUpScreen() {
 
 
     const handleCreateAccount = async () => {
-        console.log("handleCreateAccount called");
+
+        if (!name || !occupation || !location || !email || !password || !age || !biomessage || !whatIWant || !whatIOffer || !interests) {
+            setError("All fields are required!");
+            return;
+        }
+
+
         try {
             console.log("Creating account...");
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -172,7 +178,7 @@ export default function SignUpScreen() {
                 whatIWant,
                 whatIOffer,
                 interests: interests.split(",").map(interest => interest.trim()),
-                hobbyImage: null,
+                hobbyImage: hobbyImage || null,
                 profilePic: profilePic || DEFAULT_PROFILE_PIC,
                 isProfileComplete: true,
                 createdAt: new Date(),
