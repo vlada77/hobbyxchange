@@ -9,20 +9,21 @@ import { useRouter } from "expo-router";
 import FilledButton from "@/components/FilledButton";
 import { uploadImage } from '@/utils/uploadImage';
 import * as FileSystem from "expo-file-system";
-const DEFAULT_PROFILE_PIC = require('@/assets/images/default-profile-pic.jpg');
-const DEFAULT_HOBBY_PIC = require('@/assets/images/default_hobby.jpg');
 import { Alert } from "react-native";
 
 import { useLayoutEffect } from 'react';
 import { useNavigation } from 'expo-router';
 export default function SignUpScreen() {
+    const DEFAULT_PROFILE_PIC = require('@/assets/images/default-profile-pic.jpg');
+    const DEFAULT_HOBBY_PIC = require('@/assets/images/default_hobby.jpg');
+
     const router = useRouter();
 
     const navigation = useNavigation();
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            headerTitle: "Sign Up", // Only changes back button title in this screen
+            headerTitle: "Sign Up",
         });
     }, [navigation]);
 
@@ -179,7 +180,7 @@ export default function SignUpScreen() {
                 whatIOffer,
                 interests: interests.split(",").map(interest => interest.trim()),
                 hobbyImage: hobbyImage || null,
-                profilePic: profilePic || DEFAULT_PROFILE_PIC,
+                profilePic: profilePic || null,
                 isProfileComplete: true,
                 createdAt: new Date(),
             });
