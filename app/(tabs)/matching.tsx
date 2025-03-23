@@ -58,30 +58,40 @@ export default function MatchingPage() {
                     !displayedUserIds.includes(user.id)
                 );
 
-                for (const user of filteredUsers) {
-                    console.log("Filetered users", user.name)
-                };
 
-                const matchingUsers = filteredUsers.filter((user: any) =>
-                    user.location === currentUserLocation ||
-                    user.interests.some((interest: string) =>
+
+                const sortedUsers = filteredUsers.sort((a: any, b: any) => {
+
+                    const aHasLocation = a.location === currentUserLocation;
+                    const bHasLocation = b.location === currentUserLocation;
+
+
+                    const aSharedInterests = a.interests.filter((interest: string) =>
                         currentUserInterests
                             .map((currentInterest: string) => currentInterest.toLowerCase())
                             .includes(interest.toLowerCase())
-                    )
-                );
+                    ).length;
 
-                for (const user of matchingUsers) {
-                    console.log("Matching users", user.name)
-                }
+                    const bSharedInterests = b.interests.filter((interest: string) =>
+                        currentUserInterests
+                            .map((currentInterest: string) => currentInterest.toLowerCase())
+                            .includes(interest.toLowerCase())
+                    ).length;
 
-                if (matchingUsers.length > 0) {
 
-                    const randomUser = matchingUsers[Math.floor(Math.random() * matchingUsers.length)];
-                    setRandomUser(randomUser);
-                    setDisplayedUserIds(prevIds => [...prevIds, randomUser.id]);
+                    const aScore = (aHasLocation ? 2 : 0) + aSharedInterests;
+                    const bScore = (bHasLocation ? 2 : 0) + bSharedInterests;
+
+
+                    return bScore - aScore;
+                });
+
+                const bestMatch = sortedUsers.length > 0 ? sortedUsers[0] : null;
+
+                if (bestMatch) {
+                    setRandomUser(bestMatch);
+                    setDisplayedUserIds(prevIds => [...prevIds, bestMatch.id]);
                 } else {
-
                     showRandomUser(filteredUsers);
                 }
             } catch (error) {
@@ -136,23 +146,36 @@ export default function MatchingPage() {
                         !displayedUserIds.includes(user.id)
                     );
 
-                    const matchingUsers = filteredUsers.filter((user: any) =>
-                        user.location === currentUserLocation ||
-                        user.interests.some((interest: string) =>
+
+
+                    const sortedUsers = filteredUsers.sort((a: any, b: any) => {
+                        const aHasLocation = a.location === currentUserLocation;
+                        const bHasLocation = b.location === currentUserLocation;
+
+                        const aSharedInterests = a.interests.filter((interest: string) =>
                             currentUserInterests
                                 .map((currentInterest: string) => currentInterest.toLowerCase())
                                 .includes(interest.toLowerCase())
-                        )
-                    );
+                        ).length;
 
-                    for (const user of matchingUsers) {
-                        console.log("Matching users", user.name)
-                    };
+                        const bSharedInterests = b.interests.filter((interest: string) =>
+                            currentUserInterests
+                                .map((currentInterest: string) => currentInterest.toLowerCase())
+                                .includes(interest.toLowerCase())
+                        ).length;
 
-                    if (matchingUsers.length > 0) {
-                        const randomUser = matchingUsers[Math.floor(Math.random() * matchingUsers.length)];
-                        setRandomUser(randomUser);
-                        setDisplayedUserIds(prevIds => [...prevIds, randomUser.id]);
+                        const aScore = (aHasLocation ? 2 : 0) + aSharedInterests;
+                        const bScore = (bHasLocation ? 2 : 0) + bSharedInterests;
+
+                        return bScore - aScore;
+                    });
+
+                    const bestMatch = sortedUsers.length > 0 ? sortedUsers[0] : null;
+
+
+                    if (bestMatch) {
+                        setRandomUser(bestMatch);
+                        setDisplayedUserIds(prevIds => [...prevIds, bestMatch.id]);
                     } else {
                         showRandomUser(filteredUsers);
                     }
