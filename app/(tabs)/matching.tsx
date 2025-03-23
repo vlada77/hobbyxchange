@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Link } from 'expo-router';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
@@ -252,9 +252,14 @@ export default function MatchingPage() {
 
                     <View style={styles.profileContainer}>
                         {randomUser.profilePic ? (
-                            <ProfileInfo avatarSource={{ uri: randomUser.profilePic }} name={randomUser.name} />
+                            <TouchableOpacity onPress={() => router.push(`/fullprofile/${randomUser.id}`)}>
+                                <ProfileInfo avatarSource={{ uri: randomUser.profilePic }} name={randomUser.name} />
+                            </TouchableOpacity>
+
                         ) : (
-                            <ProfileInfo avatarSource={require('@/assets/images/default-profile-pic.jpg')} name={randomUser.name} />
+                            <TouchableOpacity onPress={() => router.push(`/fullprofile/${randomUser.id}`)}>
+                                <ProfileInfo avatarSource={require('@/assets/images/default-profile-pic.jpg')} name={randomUser.name} />
+                            </TouchableOpacity>
                         )}
                         <OutlinedButton icon="refresh" label="Next" height={34} width={100} onPress={handleNextMatch} />
 

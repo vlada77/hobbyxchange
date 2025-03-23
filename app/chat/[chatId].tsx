@@ -12,6 +12,7 @@ import { ImageSource } from 'expo-image';
 import { useLayoutEffect } from "react";
 
 export default function ChatScreen() {
+    const router = useRouter();
     const params = useLocalSearchParams();
     const { chatId } = params;
     const navigation = useNavigation();
@@ -48,11 +49,9 @@ export default function ChatScreen() {
                 const chatData = chatSnap.data();
                 const currentUserId = auth.currentUser?.uid;
 
-                // Find the other user by filtering out the current user
                 const otherUserData = chatData.userIds.find((id: string) => id !== currentUserId);
 
                 if (otherUserData) {
-                    // Directly use the user1 and user2 data already stored in the chat document
                     const otherUser = currentUserId === chatData.user1?.id ? chatData.user2 : chatData.user1;
 
                     setOtherUser(otherUser);
@@ -95,14 +94,11 @@ export default function ChatScreen() {
         }
 
         const chatRef = doc(db, "chats", chatId);
-        console.log(newMessage);
-        console.log(chatRef);
 
         await updateDoc(chatRef, {
             lastMessage: newMessage,
             timestamp: serverTimestamp(),
         });
-        console.log("caca");
 
         setNewMessage("");
     };
@@ -114,7 +110,11 @@ export default function ChatScreen() {
                 <View>
                     <View style={styles.profileContainer}>
                         {otherUser.profilePic ? (
-                            <ProfileInfo avatarSource={{ uri: otherUser.profilePic }} name={otherUser.name} />
+                            <TouchableOpacity onPress={() => router.push(`/fullprofile/${otherUser.id}`)}>
+                                <ProfileInfo avatarSource={{ uri: otherUser.profilePic }} name={otherUser.name} />
+
+                            </TouchableOpacity>
+
                         ) : (
                             <ProfileInfo avatarSource={require('@/assets/images/default-profile-pic.jpg')} name={otherUser.name} />
                         )}
