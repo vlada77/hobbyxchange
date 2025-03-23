@@ -20,7 +20,7 @@ export default function ChatScreen() {
     useLayoutEffect(() => {
         navigation.setOptions({
             headerTitle: "Chat",
-            headerBackTitle: "Messages", // Only changes back button title in this screen
+            headerBackTitle: "Messages",
         });
     }, [navigation]);
 
@@ -118,7 +118,7 @@ export default function ChatScreen() {
                         ) : (
                             <ProfileInfo avatarSource={require('@/assets/images/default-profile-pic.jpg')} name={otherUser.name} />
                         )}
-                        <OutlinedButton icon="flag-o" label="Report" height={34} borderColor="#993333" color="#A65A5A" onPress={() => alert("You pressed a button.")} />
+                        <OutlinedButton icon="flag-o" label="Report" height={34} width={100} borderColor="#993333" color="#A65A5A" onPress={() => alert("We will review this profile! Thank you for your feedback!")} />
                     </View>
 
 
