@@ -192,10 +192,10 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
 
-    myMessage: {
+    otherMessage: {
         alignItems: 'flex-start',
     },
-    otherMessage: {
+    myMessage: {
         alignItems: 'flex-end',
     },
     messageText: {

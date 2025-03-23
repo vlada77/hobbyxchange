@@ -10,12 +10,16 @@ import OutlinedButton from '@/components/OutlinedButton';
 import FilledButton from '@/components/FilledButton';
 import InterestButton from '@/components/InterestButton';
 import ProfileInfo from '@/components/ProfileInfo';
+import { Alert } from 'react-native';
+
+import { ActivityIndicator } from 'react-native';
 
 
 export default function MatchingPage() {
     const [randomUser, setRandomUser] = useState<any>(null);
     const router = useRouter();
     const [loading, setLoading] = useState(true);
+
     const currentUserId = auth.currentUser?.uid;
     const currentUser = auth.currentUser;
 
@@ -25,11 +29,91 @@ export default function MatchingPage() {
     }
 
 
+    const [displayedUserIds, setDisplayedUserIds] = useState<string[]>([]);
+
+
+    const handleNextMatch = async () => {
+        if (auth.currentUser) {
+            try {
+                const currentUserRef = doc(db, "users", auth.currentUser.uid);
+                const currentUserSnap = await getDoc(currentUserRef);
+
+                if (!currentUserSnap.exists()) {
+                    console.error("Current user not found in Firestore.");
+                    return;
+                }
+
+                const currentUserData = currentUserSnap.data();
+                const currentUserLocation = currentUserData.location;
+                const currentUserInterests = currentUserData.interests || [];
+
+                const usersRef = collection(db, "users");
+                const querySnapshot = await getDocs(usersRef);
+
+                const allUsers = querySnapshot.docs.map(doc => doc.data());
+
+
+                const filteredUsers = allUsers.filter(user =>
+                    user.id !== auth.currentUser?.uid &&
+                    !displayedUserIds.includes(user.id)
+                );
+
+                for (const user of filteredUsers) {
+                    console.log("Filetered users", user.name)
+                };
+
+                const matchingUsers = filteredUsers.filter((user: any) =>
+                    user.location === currentUserLocation ||
+                    user.interests.some((interest: string) =>
+                        currentUserInterests
+                            .map((currentInterest: string) => currentInterest.toLowerCase())
+                            .includes(interest.toLowerCase())
+                    )
+                );
+
+                for (const user of matchingUsers) {
+                    console.log("Matching users", user.name)
+                }
+
+                if (matchingUsers.length > 0) {
+
+                    const randomUser = matchingUsers[Math.floor(Math.random() * matchingUsers.length)];
+                    setRandomUser(randomUser);
+                    setDisplayedUserIds(prevIds => [...prevIds, randomUser.id]);
+                } else {
+
+                    showRandomUser(filteredUsers);
+                }
+            } catch (error) {
+                console.error("Error fetching users:", error);
+            }
+        }
+    };
+
+
+    const showRandomUser = (filteredUsers: any[]) => {
+        const remainingUsers = filteredUsers.filter(user => !displayedUserIds.includes(user.id));
+
+        if (remainingUsers.length > 0) {
+            const randomUser = remainingUsers[Math.floor(Math.random() * remainingUsers.length)];
+            setRandomUser(randomUser);
+            setDisplayedUserIds(prevIds => [...prevIds, randomUser.id]);
+        } else {
+            setLoading(true);
+            setDisplayedUserIds([]);
+            setRandomUser(null);
+
+            Alert.alert("No more users left, starting over...");
+            setTimeout(() => {
+                setLoading(false);
+            }, 2000);
+        }
+    };
+
     useEffect(() => {
         const fetchUsers = async () => {
             try {
                 if (auth.currentUser) {
-
                     const currentUserRef = doc(db, "users", auth.currentUser.uid);
                     const currentUserSnap = await getDoc(currentUserRef);
 
@@ -40,24 +124,37 @@ export default function MatchingPage() {
 
                     const currentUserData = currentUserSnap.data();
                     const currentUserLocation = currentUserData.location;
+                    const currentUserInterests = currentUserData.interests || [];
 
                     const usersRef = collection(db, "users");
                     const querySnapshot = await getDocs(usersRef);
 
                     const allUsers = querySnapshot.docs.map(doc => doc.data());
 
-                    const users = allUsers.filter(user =>
+                    const filteredUsers = allUsers.filter(user =>
                         user.id !== auth.currentUser?.uid &&
-                        user.location === currentUserLocation
-
+                        !displayedUserIds.includes(user.id)
                     );
 
-                    if (users.length > 0) {
-                        const randomUser = users[Math.floor(Math.random() * users.length)];
+                    const matchingUsers = filteredUsers.filter((user: any) =>
+                        user.location === currentUserLocation ||
+                        user.interests.some((interest: string) =>
+                            currentUserInterests
+                                .map((currentInterest: string) => currentInterest.toLowerCase())
+                                .includes(interest.toLowerCase())
+                        )
+                    );
+
+                    for (const user of matchingUsers) {
+                        console.log("Matching users", user.name)
+                    };
+
+                    if (matchingUsers.length > 0) {
+                        const randomUser = matchingUsers[Math.floor(Math.random() * matchingUsers.length)];
                         setRandomUser(randomUser);
-                    }
-                    else {
-                        console.log("No users found...");
+                        setDisplayedUserIds(prevIds => [...prevIds, randomUser.id]);
+                    } else {
+                        showRandomUser(filteredUsers);
                     }
                 }
                 setLoading(false);
@@ -67,8 +164,11 @@ export default function MatchingPage() {
             }
         };
 
-        fetchUsers();
-    }, [currentUserId]);
+
+        if (!randomUser) {
+            fetchUsers();
+        }
+    }, [auth.currentUser, displayedUserIds, randomUser]);
 
 
     const handleChat = async () => {
@@ -86,20 +186,17 @@ export default function MatchingPage() {
         }
 
         const chatId = [currentUserId, randomUserId].sort().join("_");
-        console.log("Generated Chat ID:", chatId);
 
         const chatRef = doc(db, "chats", chatId);
-        console.log("chatRef path:", chatRef.path);
 
         try {
-            // Attempt to get the chat document
             const chatSnap = await getDoc(chatRef);
             console.log("chatSnap exists:", chatSnap.exists());
 
             if (!chatSnap.exists()) {
                 console.log("Creating new chat...");
 
-                // Get current user and random user data (name, profilePic)
+
                 const currentUserRef = doc(db, "users", currentUserId);
                 const randomUserRef = doc(db, "users", randomUserId);
 
@@ -146,8 +243,10 @@ export default function MatchingPage() {
         }
     };
 
+
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+
             {randomUser ? (
                 <View style={styles.container}>
 
@@ -157,7 +256,7 @@ export default function MatchingPage() {
                         ) : (
                             <ProfileInfo avatarSource={require('@/assets/images/default-profile-pic.jpg')} name={randomUser.name} />
                         )}
-                        <OutlinedButton icon="refresh" label="Next" height={34} width={100} onPress={() => alert("You pressed a button.")} />
+                        <OutlinedButton icon="refresh" label="Next" height={34} width={100} onPress={handleNextMatch} />
 
                     </View>
 
@@ -199,7 +298,7 @@ export default function MatchingPage() {
 
                 </View>
             ) : (
-                <Text>Loading...</Text>
+                <ActivityIndicator size="large" color="#0000ff" />
             )}
 
 
@@ -208,6 +307,9 @@ export default function MatchingPage() {
 }
 
 const styles = StyleSheet.create({
+    activityindicator: {
+        marginTop: 40,
+    },
     scrollContainer: {
         flexGrow: 1,
         backgroundColor: '#fff',

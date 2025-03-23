@@ -9,12 +9,13 @@ import { useRouter } from "expo-router";
 import FilledButton from "@/components/FilledButton";
 import { uploadImage } from '@/utils/uploadImage';
 import * as FileSystem from "expo-file-system";
+const DEFAULT_PROFILE_PIC = require('@/assets/images/default-profile-pic.jpg');
+const DEFAULT_HOBBY_PIC = require('@/assets/images/default_hobby.jpg');
 
 
 export default function SignUpScreen() {
     const router = useRouter();
-    const storage = getStorage();
-    const DEFAULT_PROFILE_PIC = require('@/assets/images/default-profile-pic.jpg')
+
 
     // Form State
     const [email, setEmail] = useState("");
@@ -80,9 +81,9 @@ export default function SignUpScreen() {
                 biomessage,
                 whatIWant,
                 whatIOffer,
-                interests: interests.split(","),
+                interests: interests.split(",").map(interest => interest.trim()),
                 hobbyImage: profilePic || DEFAULT_PROFILE_PIC,
-                profilePic: profilePic || null,
+                profilePic: profilePic || DEFAULT_HOBBY_PIC,
                 isProfileComplete: true,
                 createdAt: new Date(),
             });

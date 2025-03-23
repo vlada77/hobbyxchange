@@ -74,7 +74,7 @@ export default function ProfileScreen() {
                         <Text style={styles.textLabel}>My Interests</Text>
                         <View style={styles.interestsBubbles}>
                             {userData.interests.map((interest: string, index: number) => (
-                                <InterestButton key={index} label={interest} />
+                                <InterestButton key={index} label={interest.trim()} />
                             ))}
                         </View>
                     </View>
@@ -122,8 +122,7 @@ export default function ProfileScreen() {
 }
 const styles = StyleSheet.create({
     activityindicator: {
-        marginTop: 10,
-
+        marginTop: 40,
     },
     scrollContainer: {
         flexGrow: 1,
