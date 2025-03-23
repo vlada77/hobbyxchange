@@ -61,10 +61,12 @@ export default function EditProfileScreen() {
         fetchUserData();
     }, [userId]);
 
-    const handleChange = (field: string, value: string | string[]) => {
+    const handleChange = (field: string, value: string) => {
         setUserData((prevData) => ({
             ...prevData,
-            [field]: typeof value === "string" ? value : value.join(", ")
+            [field]: field === "interests"
+                ? value.split(",").map((interest) => interest.trim())  // Trim spaces from each interest
+                : value.trim()
         }));
     };
 
@@ -239,12 +241,9 @@ export default function EditProfileScreen() {
                 <TextInput
                     placeholder="Interests (comma separated)"
                     value={userData.interests.length > 0 ? userData.interests.join(", ") : ""}
-                    onChangeText={(text) => setUserData(prev => ({
-                        ...prev,
-                        interests: text ? text.split(",").map(i => i.trim()) : [],
-                    }))} style={styles.input}
+                    onChangeText={(text) => handleChange("interests", text)}  // Use handleChange directly
+                    style={styles.input}
                 />
-
 
 
             </View>

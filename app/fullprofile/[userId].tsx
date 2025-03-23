@@ -8,18 +8,41 @@ import OutlinedButton from "@/components/OutlinedButton";
 import InterestButton from "@/components/InterestButton";
 import ImageViewer from "@/components/ImageViewer";
 import FilledButton from "@/components/FilledButton";
+import { useLocalSearchParams } from 'expo-router';
+
+import { useLayoutEffect } from 'react';
+import { useNavigation } from 'expo-router';
 
 
-export default function ProfileScreen() {
+export default function viewFullProfileScreen() {
+    const navigation = useNavigation();
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTitle: "Full Profile",
+        });
+    }, [navigation]);
+
     const router = useRouter();
+    const params = useLocalSearchParams();
+    const { userId } = params;
+    console.log(userId);
+
     const [userData, setUserData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchUserData = async () => {
-            if (auth.currentUser) {
-                const userRef = doc(db, "users", auth.currentUser.uid);
+            if (typeof userId !== 'string') {
+                console.error("userId is not a string:", userId);
+                return;
+            }
+
+            if (userId) {
+                const userRef = doc(db, "users", userId);
                 const userSnap = await getDoc(userRef);
+
+                console.log(userRef);
 
 
                 if (userSnap.exists()) {
@@ -32,16 +55,9 @@ export default function ProfileScreen() {
         };
 
         fetchUserData();
-    }, [auth.currentUser?.uid]);
+    }, [userId]);
 
-    const handleLogout = async () => {
-        await logOut();
-        router.replace("/signInScreen");
-    };
 
-    if (loading) {
-        return <ActivityIndicator size="large" color="#0000ff" style={styles.activityindicator} />;
-    }
 
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false} >
@@ -61,9 +77,6 @@ export default function ProfileScreen() {
                             <Text style={styles.profileDetails}>Location: {userData.location}</Text>
                             <Text style={styles.profileDetails}>Age: {userData.age}</Text>
                         </View>
-                    </View>
-                    <View style={styles.editButtonContainer}>
-                        <OutlinedButton label="Edit Profile" width={320} onPress={() => router.push(`/editProfileScreen`)}></OutlinedButton>
                     </View>
 
                     <View style={styles.messageContainer}>
@@ -104,18 +117,15 @@ export default function ProfileScreen() {
                                 </View>
 
                             ) : (
-                                <Text style={styles.infodetails}>Edit profile to add an image that best represents your personality or hobby! </Text>
+                                <Text style={styles.infodetails}> No Hobby Image.. </Text>
 
                             )}
 
                         </View>
                     </View>
-
-
-                    <FilledButton label="Log out" width={160} onPress={handleLogout}></FilledButton>
                 </>
             ) : (
-                <Text>No user data found</Text>
+                <Text>No user data found...</Text>
             )}
         </ScrollView>
     );
