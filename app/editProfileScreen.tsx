@@ -81,7 +81,27 @@ export default function EditProfileScreen() {
         ]);
     };
 
+    const requestCameraPermissions = async () => {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== "granted") {
+            Alert.alert("Permission Denied", "We need camera access to take a photo.");
+            return false;
+        }
+        return true;
+    };
+
+
     const takeProfilePhoto = async () => {
+
+        console.log("Checking camera permissions...");
+        const hasPermission = await requestCameraPermissions();
+        if (!hasPermission) {
+            console.log("Camera permission denied.");
+            return;
+        }
+
+        console.log("Launching camera...");
+
         let result = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
@@ -137,6 +157,15 @@ export default function EditProfileScreen() {
     };
 
     const takeHobbyPhoto = async () => {
+        console.log("Checking camera permissions...");
+        const hasPermission = await requestCameraPermissions();
+        if (!hasPermission) {
+            console.log("Camera permission denied.");
+            return;
+        }
+
+        console.log("Launching camera...");
+
         let result = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
@@ -219,27 +248,36 @@ export default function EditProfileScreen() {
             <View style={styles.infocontainer}>
                 <Text style={styles.textLabel}>Name:</Text>
 
-                <TextInput placeholder="Name" value={userData.name} onChangeText={(text) => handleChange("name", text)} style={styles.input} />
+                <TextInput placeholder="Name" placeholderTextColor="#6E6E6E" value={userData.name} onChangeText={(text) => handleChange("name", text)} style={styles.input} />
 
                 <Text style={styles.textLabel}>Age:</Text>
 
-                <TextInput placeholder="Age" value={userData.age} onChangeText={(text) => handleChange("age", text)} style={styles.input} />
+                <TextInput placeholder="Age" placeholderTextColor="#6E6E6E" value={userData.age} onChangeText={(text) => handleChange("age", text)} style={styles.input} />
 
                 <Text style={styles.textLabel}>Occupation:</Text>
 
-                <TextInput placeholder="Occupation" value={userData.occupation} onChangeText={(text) => handleChange("occupation", text)} style={styles.input} />
+                <TextInput placeholder="Occupation" placeholderTextColor="#6E6E6E" value={userData.occupation} onChangeText={(text) => handleChange("occupation", text)} style={styles.input} />
+
                 <Text style={styles.textLabel}>Location:</Text>
 
-                <TextInput placeholder="Location" value={userData.location} onChangeText={(text) => handleChange("location", text)} style={styles.input} />
+                <TextInput placeholder="Location" placeholderTextColor="#6E6E6E" value={userData.location} onChangeText={(text) => handleChange("location", text)} style={styles.input} />
+
                 <Text style={styles.textLabel}>Bio Message:</Text>
-                <TextInput placeholder="Bio" value={userData.biomessage} onChangeText={(text) => handleChange("biomessage", text)} style={styles.input} />
+
+                <TextInput placeholder="Bio" placeholderTextColor="#6E6E6E" value={userData.biomessage} onChangeText={(text) => handleChange("biomessage", text)} style={styles.input} />
+
                 <Text style={styles.textLabel}>What I Want:</Text>
-                <TextInput placeholder="What I Want" value={userData.whatIWant} onChangeText={(text) => handleChange("whatIWant", text)} style={styles.input} />
+
+                <TextInput placeholder="What I Want" placeholderTextColor="#6E6E6E" value={userData.whatIWant} onChangeText={(text) => handleChange("whatIWant", text)} style={styles.input} />
+
                 <Text style={styles.textLabel}>What I Offer:</Text>
-                <TextInput placeholder="What I Offer" value={userData.whatIOffer} onChangeText={(text) => handleChange("whatIOffer", text)} style={styles.input} />
+
+                <TextInput placeholder="What I Offer" placeholderTextColor="#6E6E6E" value={userData.whatIOffer} onChangeText={(text) => handleChange("whatIOffer", text)} style={styles.input} />
+
                 <Text style={styles.textLabel}>Interests (comma separated):</Text>
+
                 <TextInput
-                    placeholder="Interests (comma separated)"
+                    placeholder="Interests (comma separated)" placeholderTextColor="#6E6E6E"
                     value={userData.interests.length > 0 ? userData.interests.join(", ") : ""}
                     onChangeText={(text) => handleChange("interests", text)}  // Use handleChange directly
                     style={styles.input}
@@ -286,7 +324,9 @@ export default function EditProfileScreen() {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20, alignItems: "center"
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        padding: 20,
     },
     input: {
         width: 320,
