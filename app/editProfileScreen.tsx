@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Image, ScrollView, TouchableOpacity, Pressable } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, Image, ScrollView, TouchableOpacity, Pressable, KeyboardAvoidingView, Platform } from "react-native";
 import { auth, db, storage } from "@/firebase/firebaseConfig";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { Alert } from "react-native";
@@ -234,96 +234,103 @@ export default function EditProfileScreen() {
     if (loading) return <Text>Loading...</Text>;
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+            <ScrollView contentContainerStyle={styles.container}>
 
-            <TouchableOpacity onPress={pickImage}>
-                {userData.profilePic ? (
-                    <Image source={{ uri: userData.profilePic }} style={styles.profilePic} />
-                ) : (
-                    <Image source={require("@/assets/images/default-profile-pic.jpg")} style={styles.profilePic} />
-                )}
-            </TouchableOpacity>
-            <Button title="Change Profile Picture" onPress={selectProfileImage} />
-
-            <View style={styles.infocontainer}>
-                <Text style={styles.textLabel}>Name:</Text>
-
-                <TextInput placeholder="Name" placeholderTextColor="#6E6E6E" value={userData.name} onChangeText={(text) => handleChange("name", text)} style={styles.input} />
-
-                <Text style={styles.textLabel}>Age:</Text>
-
-                <TextInput placeholder="Age" placeholderTextColor="#6E6E6E" value={userData.age} onChangeText={(text) => handleChange("age", text)} style={styles.input} />
-
-                <Text style={styles.textLabel}>Occupation:</Text>
-
-                <TextInput placeholder="Occupation" placeholderTextColor="#6E6E6E" value={userData.occupation} onChangeText={(text) => handleChange("occupation", text)} style={styles.input} />
-
-                <Text style={styles.textLabel}>Location:</Text>
-
-                <TextInput placeholder="Location" placeholderTextColor="#6E6E6E" value={userData.location} onChangeText={(text) => handleChange("location", text)} style={styles.input} />
-
-                <Text style={styles.textLabel}>Bio Message:</Text>
-
-                <TextInput placeholder="Bio" placeholderTextColor="#6E6E6E" value={userData.biomessage} onChangeText={(text) => handleChange("biomessage", text)} style={styles.input} />
-
-                <Text style={styles.textLabel}>What I Want:</Text>
-
-                <TextInput placeholder="What I Want" placeholderTextColor="#6E6E6E" value={userData.whatIWant} onChangeText={(text) => handleChange("whatIWant", text)} style={styles.input} />
-
-                <Text style={styles.textLabel}>What I Offer:</Text>
-
-                <TextInput placeholder="What I Offer" placeholderTextColor="#6E6E6E" value={userData.whatIOffer} onChangeText={(text) => handleChange("whatIOffer", text)} style={styles.input} />
-
-                <Text style={styles.textLabel}>Interests (comma separated):</Text>
-
-                <TextInput
-                    placeholder="Interests (comma separated)" placeholderTextColor="#6E6E6E"
-                    value={userData.interests.length > 0 ? userData.interests.join(", ") : ""}
-                    onChangeText={(text) => handleChange("interests", text)}  // Use handleChange directly
-                    style={styles.input}
-                />
-
-
-            </View>
-
-
-            <View style={styles.hobbyimagecontainer}>
-                <TouchableOpacity onPress={selectHobbyImage}>
-                    {userData.hobbyImage ? (
-                        <View style={styles.mainImageContainer}>
-
-                            <Image source={{ uri: userData.hobbyImage }} style={styles.mainPic} />
-                            <Pressable style={styles.button} onPress={selectHobbyImage}>
-                                <Text style={styles.buttonLabel}>Change Main Image</Text>
-                            </Pressable>
-
-                        </View>
-
+                <TouchableOpacity onPress={pickImage}>
+                    {userData.profilePic ? (
+                        <Image source={{ uri: userData.profilePic }} style={styles.profilePic} />
                     ) : (
-                        <View style={styles.mainImageContainer}>
-                            <Pressable style={styles.button} onPress={selectHobbyImage}>
-                                <Text style={styles.buttonLabel}>Add Main Image</Text>
-                            </Pressable>
-                            <Text style={styles.infodetails}>Choose an image that best represents your personality or hobby! </Text>
-
-
-                        </View>
-
+                        <Image source={require("@/assets/images/default-profile-pic.jpg")} style={styles.profilePic} />
                     )}
                 </TouchableOpacity>
+                <Button title="Change Profile Picture" onPress={selectProfileImage} />
+
+                <View style={styles.infocontainer}>
+                    <Text style={styles.textLabel}>Name:</Text>
+
+                    <TextInput placeholder="Name" placeholderTextColor="#6E6E6E" value={userData.name} onChangeText={(text) => handleChange("name", text)} style={styles.input} />
+
+                    <Text style={styles.textLabel}>Age:</Text>
+
+                    <TextInput placeholder="Age" placeholderTextColor="#6E6E6E" value={userData.age} onChangeText={(text) => handleChange("age", text)} style={styles.input} />
+
+                    <Text style={styles.textLabel}>Occupation:</Text>
+
+                    <TextInput placeholder="Occupation" placeholderTextColor="#6E6E6E" value={userData.occupation} onChangeText={(text) => handleChange("occupation", text)} style={styles.input} />
+
+                    <Text style={styles.textLabel}>Location:</Text>
+
+                    <TextInput placeholder="Location" placeholderTextColor="#6E6E6E" value={userData.location} onChangeText={(text) => handleChange("location", text)} style={styles.input} />
+
+                    <Text style={styles.textLabel}>Bio Message:</Text>
+
+                    <TextInput placeholder="Bio" placeholderTextColor="#6E6E6E" value={userData.biomessage} onChangeText={(text) => handleChange("biomessage", text)} style={styles.input} />
+
+                    <Text style={styles.textLabel}>What I Want:</Text>
+
+                    <TextInput placeholder="What I Want" placeholderTextColor="#6E6E6E" value={userData.whatIWant} onChangeText={(text) => handleChange("whatIWant", text)} style={styles.input} />
+
+                    <Text style={styles.textLabel}>What I Offer:</Text>
+
+                    <TextInput placeholder="What I Offer" placeholderTextColor="#6E6E6E" value={userData.whatIOffer} onChangeText={(text) => handleChange("whatIOffer", text)} style={styles.input} />
+
+                    <Text style={styles.textLabel}>Interests (comma separated):</Text>
+
+                    <TextInput
+                        placeholder="Interests (comma separated)" placeholderTextColor="#6E6E6E"
+                        value={userData.interests.length > 0 ? userData.interests.join(", ") : ""}
+                        onChangeText={(text) => handleChange("interests", text)}  // Use handleChange directly
+                        style={styles.input}
+                    />
+
+
+                </View>
+
+
+                <View style={styles.hobbyimagecontainer}>
+                    <TouchableOpacity onPress={selectHobbyImage}>
+                        {userData.hobbyImage ? (
+                            <View style={styles.mainImageContainer}>
+
+                                <Image source={{ uri: userData.hobbyImage }} style={styles.mainPic} />
+                                <Pressable style={styles.button} onPress={selectHobbyImage}>
+                                    <Text style={styles.buttonLabel}>Change Main Image</Text>
+                                </Pressable>
+
+                            </View>
+
+                        ) : (
+                            <View style={styles.mainImageContainer}>
+                                <Pressable style={styles.button} onPress={selectHobbyImage}>
+                                    <Text style={styles.buttonLabel}>Add Main Image</Text>
+                                </Pressable>
+                                <Text style={styles.infodetails}>Choose an image that best represents your personality or hobby! </Text>
+
+
+                            </View>
+
+                        )}
+                    </TouchableOpacity>
 
 
 
 
-            </View>
+                </View>
 
-            <FilledButton label="Save Changes" width={160} onPress={saveChanges} />
-        </ScrollView>
+                <FilledButton label="Save Changes" width={160} onPress={saveChanges} />
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
+        flexGrow: 1,
+        justifyContent: 'flex-start',
         backgroundColor: '#fff',
         alignItems: 'center',
         padding: 20,
