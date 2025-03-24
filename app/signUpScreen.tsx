@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity, Pressable } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity, Pressable, ScrollView } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "@/firebase/firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
@@ -10,10 +10,13 @@ import FilledButton from "@/components/FilledButton";
 import { uploadImage } from '@/utils/uploadImage';
 import * as FileSystem from "expo-file-system";
 import { Alert } from "react-native";
+import { MaterialIcons } from '@expo/vector-icons';
 
 import { useLayoutEffect } from 'react';
 import { useNavigation } from 'expo-router';
+
 export default function SignUpScreen() {
+
     const DEFAULT_PROFILE_PIC = require('@/assets/images/default-profile-pic.jpg');
     const DEFAULT_HOBBY_PIC = require('@/assets/images/default_hobby.jpg');
 
@@ -27,7 +30,6 @@ export default function SignUpScreen() {
         });
     }, [navigation]);
 
-    // Form State
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
@@ -52,7 +54,27 @@ export default function SignUpScreen() {
         ]);
     };
 
+    const requestCameraPermissions = async () => {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== "granted") {
+            Alert.alert("Permission Denied", "We need camera access to take a photo.");
+            return false;
+        }
+        return true;
+    };
+
+
     const takeProfilePhoto = async () => {
+
+        console.log("Checking camera permissions...");
+        const hasPermission = await requestCameraPermissions();
+        if (!hasPermission) {
+            console.log("Camera permission denied.");
+            return;
+        }
+
+        console.log("Launching camera...");
+
         let result = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
@@ -108,6 +130,17 @@ export default function SignUpScreen() {
     };
 
     const takeHobbyPhoto = async () => {
+
+        console.log("Checking camera permissions...");
+        const hasPermission = await requestCameraPermissions();
+        if (!hasPermission) {
+            console.log("Camera permission denied.");
+            return;
+        }
+
+        console.log("Launching camera...");
+
+
         let result = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
@@ -195,7 +228,7 @@ export default function SignUpScreen() {
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
 
 
             <TouchableOpacity onPress={selectProfileImage}>
@@ -209,18 +242,18 @@ export default function SignUpScreen() {
             </TouchableOpacity>
 
 
-            <TextInput placeholder="Full Name" value={name} onChangeText={setName} style={styles.input} />
-            <TextInput placeholder="Occupation" value={occupation} onChangeText={setOccupation} style={styles.input} />
-            <TextInput placeholder="Location" value={location} onChangeText={setLocation} style={styles.input} />
-            <TextInput placeholder="Age" value={age} onChangeText={setAge} style={styles.input} />
-            <TextInput placeholder="What I Want (ex. dance classes)" value={whatIWant} onChangeText={setWhatIWant} style={styles.input} />
-            <TextInput placeholder="What I Offer (ex. french classes)" value={whatIOffer} onChangeText={setWhatIOffer} style={styles.input} />
-            <TextInput placeholder="Interests (comma separated)" value={interests} onChangeText={setInterests} style={styles.input} />
-            <TextInput placeholder="Bio Message" value={biomessage} onChangeText={setbiomessage} style={styles.input} />
+            <TextInput placeholder="Full Name" placeholderTextColor="#6E6E6E" value={name} onChangeText={setName} style={styles.input} />
+            <TextInput placeholder="Occupation" placeholderTextColor="#6E6E6E" value={occupation} onChangeText={setOccupation} style={styles.input} />
+            <TextInput placeholder="Location" placeholderTextColor="#6E6E6E" value={location} onChangeText={setLocation} style={styles.input} />
+            <TextInput placeholder="Age" placeholderTextColor="#6E6E6E" value={age} onChangeText={setAge} style={styles.input} />
+            <TextInput placeholder="What I Want (ex. dance classes)" placeholderTextColor="#6E6E6E" value={whatIWant} onChangeText={setWhatIWant} style={styles.input} />
+            <TextInput placeholder="What I Offer (ex. french classes)" placeholderTextColor="#6E6E6E" value={whatIOffer} onChangeText={setWhatIOffer} style={styles.input} />
+            <TextInput placeholder="Interests (comma separated)" placeholderTextColor="#6E6E6E" value={interests} onChangeText={setInterests} style={styles.input} />
+            <TextInput placeholder="Bio Message" placeholderTextColor="#6E6E6E" value={biomessage} onChangeText={setbiomessage} style={styles.input} />
 
 
-            <TextInput placeholder="Email" value={email} onChangeText={setEmail} style={styles.logininput} />
-            <TextInput placeholder="Password" value={password} onChangeText={setPassword} style={styles.logininput} secureTextEntry />
+            <TextInput placeholder="Email" placeholderTextColor="#6E6E6E" value={email} onChangeText={setEmail} style={styles.logininput} />
+            <TextInput placeholder="Password" placeholderTextColor="#6E6E6E" value={password} onChangeText={setPassword} style={styles.logininput} secureTextEntry />
 
 
             <TouchableOpacity onPress={selectHobbyImage}>
@@ -234,7 +267,9 @@ export default function SignUpScreen() {
                 ) : (
                     <View style={styles.hobbyContainer}>
                         <Text style={styles.hobbyText}> Choose Main Picture </Text>
-                        <Text style={styles.hobbyImagePlaceholder}></Text>
+                        <View style={styles.hobbyImagePlaceholder}>
+                            <MaterialIcons name="photo-library" size={18} color="#9A9A9A" />
+                        </View>
                     </View>
                 )}
             </TouchableOpacity>
@@ -246,17 +281,16 @@ export default function SignUpScreen() {
                 <FilledButton label="Create Account" width={320} onPress={handleCreateAccount}></FilledButton>
             </View>
 
-        </View>
+        </ScrollView>
     );
 }
 
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
         padding: 20,
-        alignItems: "center",
-        backgroundColor: "#fff"
     },
 
     title:
@@ -349,6 +383,8 @@ const styles = StyleSheet.create({
         width: 30,
         height: 30,
         borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
         borderColor: "#3f3f3f",
         borderWidth: 0.7,
         backgroundColor: "#E0E0E0",
@@ -359,12 +395,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         fontSize: 15,
+        color: '#6E6E6E',
         textAlign: 'center',
     },
 
 
     createAccount: {
         marginTop: 20,
+        marginBottom: 20,
     },
 
 

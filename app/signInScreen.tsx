@@ -40,10 +40,12 @@ export default function SignInScreen() {
                 <>
 
                     <Image source={require('@/assets/images/temp-logo.jpg')} style={styles.image}></Image>
+                    <Text style={styles.title}>HobbyxChange</Text>
 
                     <TextInput
                         style={styles.input}
                         placeholder="Email"
+                        placeholderTextColor="#6E6E6E"
                         value={email}
                         onChangeText={setEmail}
                         keyboardType="email-address"
@@ -51,6 +53,7 @@ export default function SignInScreen() {
                     <TextInput
                         style={styles.input}
                         placeholder="Password"
+                        placeholderTextColor="#6E6E6E"
                         value={password}
                         onChangeText={setPassword}
                         secureTextEntry
@@ -84,15 +87,24 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         padding: 20,
         alignItems: 'center',
-        justifyContent: 'center',
         flexDirection: 'column',
     },
 
+
     image: {
+        marginTop: 100,
         width: 200,
         height: 200,
-        marginBottom: 50,
+        marginBottom: 5,
     },
+
+    title: {
+        fontWeight: '500',
+        fontSize: 30,
+        marginBottom: 50,
+
+    },
+
     input: {
         width: 320,
         marginBottom: 10,
