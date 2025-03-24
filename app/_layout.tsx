@@ -22,7 +22,7 @@ export default function RootLayout() {
 
   return (
     <Stack screenOptions={{
-      headerBackTitle: "Back", // 👈 Default back title for all screens
+      headerBackTitle: "Back",
     }}>
       {isAuthenticated ? (
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
