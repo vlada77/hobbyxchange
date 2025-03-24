@@ -24,7 +24,7 @@
     "cloudinary": "^2.6.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "expo": "~52.0.38",
+    "expo": "^52.0.40",
     "expo-blur": "~14.0.3",
     "expo-cli": "^6.3.12",
     "expo-constants": "~17.0.8",
