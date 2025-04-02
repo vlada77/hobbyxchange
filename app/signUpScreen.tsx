@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity, Pressable, ScrollView } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity, Pressable, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "@/firebase/firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
@@ -228,66 +228,73 @@ export default function SignUpScreen() {
     };
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+            <ScrollView contentContainerStyle={styles.container}>
 
 
-            <TouchableOpacity onPress={selectProfileImage}>
-                {profilePic ? (
-                    <Image source={{ uri: profilePic }} style={styles.profileImage} />
-                ) : (
-                    <View style={styles.profilePlaceholder}>
-                        <Text style={styles.pictext}> Tap to Add Picture </Text>
-                    </View>
-                )}
-            </TouchableOpacity>
-
-
-            <TextInput placeholder="Full Name" placeholderTextColor="#6E6E6E" value={name} onChangeText={setName} style={styles.input} />
-            <TextInput placeholder="Occupation" placeholderTextColor="#6E6E6E" value={occupation} onChangeText={setOccupation} style={styles.input} />
-            <TextInput placeholder="Location" placeholderTextColor="#6E6E6E" value={location} onChangeText={setLocation} style={styles.input} />
-            <TextInput placeholder="Age" placeholderTextColor="#6E6E6E" value={age} onChangeText={setAge} style={styles.input} />
-            <TextInput placeholder="What I Want (ex. dance classes)" placeholderTextColor="#6E6E6E" value={whatIWant} onChangeText={setWhatIWant} style={styles.input} />
-            <TextInput placeholder="What I Offer (ex. french classes)" placeholderTextColor="#6E6E6E" value={whatIOffer} onChangeText={setWhatIOffer} style={styles.input} />
-            <TextInput placeholder="Interests (comma separated)" placeholderTextColor="#6E6E6E" value={interests} onChangeText={setInterests} style={styles.input} />
-            <TextInput placeholder="Bio Message" placeholderTextColor="#6E6E6E" value={biomessage} onChangeText={setbiomessage} style={styles.input} />
-
-
-            <TextInput placeholder="Email" placeholderTextColor="#6E6E6E" value={email} onChangeText={setEmail} style={styles.logininput} />
-            <TextInput placeholder="Password" placeholderTextColor="#6E6E6E" value={password} onChangeText={setPassword} style={styles.logininput} secureTextEntry />
-
-
-            <TouchableOpacity onPress={selectHobbyImage}>
-                {hobbyImage ? (
-                    <View style={styles.hobbyContainer}>
-                        <Text style={styles.hobbyText}> Change Main Picture </Text>
-                        <Image source={{ uri: hobbyImage }} style={styles.hobbyImage} />
-
-                    </View>
-
-                ) : (
-                    <View style={styles.hobbyContainer}>
-                        <Text style={styles.hobbyText}> Choose Main Picture </Text>
-                        <View style={styles.hobbyImagePlaceholder}>
-                            <MaterialIcons name="photo-library" size={18} color="#9A9A9A" />
+                <TouchableOpacity onPress={selectProfileImage}>
+                    {profilePic ? (
+                        <Image source={{ uri: profilePic }} style={styles.profileImage} />
+                    ) : (
+                        <View style={styles.profilePlaceholder}>
+                            <Text style={styles.pictext}> Tap to Add Picture </Text>
                         </View>
-                    </View>
-                )}
-            </TouchableOpacity>
+                    )}
+                </TouchableOpacity>
 
 
-            {error ? <Text style={styles.error}>{error}</Text> : null}
+                <TextInput placeholder="Full Name" placeholderTextColor="#6E6E6E" value={name} onChangeText={setName} style={styles.input} />
+                <TextInput placeholder="Occupation" placeholderTextColor="#6E6E6E" value={occupation} onChangeText={setOccupation} style={styles.input} />
+                <TextInput placeholder="Location" placeholderTextColor="#6E6E6E" value={location} onChangeText={setLocation} style={styles.input} />
+                <TextInput placeholder="Age" placeholderTextColor="#6E6E6E" value={age} onChangeText={setAge} style={styles.input} />
+                <TextInput placeholder="What I Want (ex. dance classes)" placeholderTextColor="#6E6E6E" value={whatIWant} onChangeText={setWhatIWant} style={styles.input} />
+                <TextInput placeholder="What I Offer (ex. french classes)" placeholderTextColor="#6E6E6E" value={whatIOffer} onChangeText={setWhatIOffer} style={styles.input} />
+                <TextInput placeholder="Interests (comma separated)" placeholderTextColor="#6E6E6E" value={interests} onChangeText={setInterests} style={styles.input} />
+                <TextInput placeholder="Bio Message" placeholderTextColor="#6E6E6E" value={biomessage} onChangeText={setbiomessage} style={styles.input} />
 
-            <View style={styles.createAccount}>
-                <FilledButton label="Create Account" width={320} onPress={handleCreateAccount}></FilledButton>
-            </View>
 
-        </ScrollView>
+                <TextInput placeholder="Email" placeholderTextColor="#6E6E6E" value={email} onChangeText={setEmail} style={styles.logininput} />
+                <TextInput placeholder="Password" placeholderTextColor="#6E6E6E" value={password} onChangeText={setPassword} style={styles.logininput} secureTextEntry />
+
+
+                <TouchableOpacity onPress={selectHobbyImage}>
+                    {hobbyImage ? (
+                        <View style={styles.hobbyContainer}>
+                            <Text style={styles.hobbyText}> Change Main Picture </Text>
+                            <Image source={{ uri: hobbyImage }} style={styles.hobbyImage} />
+
+                        </View>
+
+                    ) : (
+                        <View style={styles.hobbyContainer}>
+                            <Text style={styles.hobbyText}> Choose Main Picture </Text>
+                            <View style={styles.hobbyImagePlaceholder}>
+                                <MaterialIcons name="photo-library" size={18} color="#9A9A9A" />
+                            </View>
+                        </View>
+                    )}
+                </TouchableOpacity>
+
+
+                {error ? <Text style={styles.error}>{error}</Text> : null}
+
+                <View style={styles.createAccount}>
+                    <FilledButton label="Create Account" width={320} onPress={handleCreateAccount}></FilledButton>
+                </View>
+
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 }
 
 
 const styles = StyleSheet.create({
     container: {
+        flexGrow: 1,
+        justifyContent: 'flex-start',
         backgroundColor: '#fff',
         alignItems: 'center',
         padding: 20,
